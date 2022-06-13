@@ -30,19 +30,22 @@ export const Login = () => {
   }
 
   return (
-    <main >
+    <main style={{ textAlign: "center" }}>
+
       <dialog ref={invalidDialog}>
         <div>Username or password was not valid.</div>
         <button onClick={e => invalidDialog.current.close()}>Close</button>
       </dialog>
+      
       <section>
         <form onSubmit={handleLogin}>
+          <h3>Welcome Back!</h3>
           <fieldset>
-            <label htmlFor="inputUsername"> Username</label>
-            <input ref={username} type="username" id="username" placeholder="Username address" required autoFocus />
+            <label htmlFor="inputUsername"></label>
+            <input ref={username} type="username" id="username" placeholder="Username" required autoFocus />
           </fieldset>
           <fieldset>
-            <label htmlFor="inputPassword"> Password </label>
+            <label htmlFor="inputPassword"></label>
             <input ref={password} type="password" id="password" placeholder="Password" required />
           </fieldset>
           <fieldset>
