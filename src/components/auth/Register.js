@@ -11,6 +11,7 @@ export const Register = () => {
   const history = useHistory()
   const verifyPassword = useRef()
   const passwordDialog = useRef()
+  const email = useRef()
 
   const handleRegister = (e) => {
     e.preventDefault()
@@ -19,6 +20,7 @@ export const Register = () => {
       const newUser = {
         "username": username.current.value,
         "password": password.current.value,
+        "email": email.current.value,
         "first_name": firstName.current.value,
         "last_name": lastName.current.value
       }
@@ -55,6 +57,10 @@ export const Register = () => {
         <fieldset>
           <label htmlFor="inputUsername"></label>
           <input ref={username} type="text" name="username" placeholder="Username" required />
+        </fieldset>
+        <fieldset>
+          <label htmlFor="inputEmail"></label>
+          <input ref={email} type="text" name="email" placeholder="Email" required />
         </fieldset>
         <fieldset>
           <label htmlFor="inputPassword"></label>

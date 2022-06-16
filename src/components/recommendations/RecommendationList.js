@@ -1,0 +1,1 @@
+// Export a function that prints the rec list for the current user
