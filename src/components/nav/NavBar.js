@@ -1,3 +1,6 @@
+// TODO: Add a link for each page of the app
+  // Watch List, Profile, Favorites, Home
+  
 import React from "react"
 import { Link, useHistory } from "react-router-dom"
 import "./NavBar.css"
