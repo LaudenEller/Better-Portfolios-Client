@@ -10,3 +10,11 @@
                             // the rec popup should disappear
 // When the "remove" button is clicked
     // The issuer should be removed from the favorites list
+
+// add refresh state
+
+// add modal state
+
+// add function that opens modal
+
+// print the modal, and the fave list
