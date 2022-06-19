@@ -2,48 +2,47 @@
 
 
 
-export const UpdateUserForm = ({ user }, { refresh }, { setRefresh }, { editForm }, { setEditForm }) => {
+export const UpdateUserForm = ({ user, ChangeUserState, updatedUser, setUpdatedUser, UpdateUser, refresh, setRefresh, editForm, setEditForm }) => {
     // handle updating a user
-// add state to save updated user data
+    // add state to save updated user data
+    
 
-const UpdateUser = (e) => {
-    // Handle updating a user
-    // refresh jsx
-    // close edit form
-}
+   
     // return an update form
     return (
         <>
             <div>
-                <div>User: {user.first_name} {user.last_name}</div>
-                <div>Username: {user.username}</div>
+                <div>User: {user?.first_name} {user?.last_name}</div>
+                <div>Username: {user?.username}</div>
                 {/* Add form pre-populated with user's email */}
-                {/* <textarea id="email" name="email"
+                {/* <div>
+                    <textarea id="email" name="email"
                     value={user.email}>
                             <textarea/> */}
-                 {/* <fieldset>
-                     <div className="form-group">
-                         <input
+                {/* </div> */}
+                <div className="form-group">
+                    <fieldset>
+                        <input
                             required autoFocus
                             type="text" id="email"
                             className="form-control"
-                            placeholder="add text"
-                            value={form.label}
+                            // placeholder={user.email}
+                            name="email"
+                            value={user?.email}
                             onChange={
-                                (e) => {
-                                    const copy = {...form}
-                                    copy.label = e.target.value
-                                    updateForm(copy)
-                                }
+                               
+                                ChangeUserState
+                                
                             }
                         />
-                         */}
-                            
-                        </div>
-                    <button onClick={UpdateUser()
-                    }>Update User</button>
-                
-                {/* </fieldset> */}
+
+
+                    </fieldset>
+                </div>
+                <button onClick={(e) => UpdateUser(e)
+                }>Update User</button>
+                </div>
+
             </>
             )
 }

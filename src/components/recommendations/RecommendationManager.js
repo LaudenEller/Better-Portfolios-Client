@@ -26,7 +26,7 @@ export const deleteRecommendations = (recommendationsId) => {
 
 // Get user's recs
 export const getRecommendations = () => {
-    return fetchIt(`${Settings}/recommendations`, {
+    return fetchIt(`${Settings.API}/recommendations`, {
     headers: {
       "Authorization": `Token ${localStorage.getItem("token")}`
   }})

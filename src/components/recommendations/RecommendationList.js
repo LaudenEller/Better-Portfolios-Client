@@ -1,30 +1,6 @@
-// Export a function that prints the rec list for the current user
-import { useState, useEffect } from "react"
-import { getRecommendations } from "./RecommendationManager"
-
-export const RecList = ({refresh, setRefresh}) => {
-    const [recs, setRecs] = useState()
-
-    useEffect(() => {
-        getRecommendations()
-            .then((d => setRecs(d)))
-    },
-        [])
-
-    const HandleReject = (RecId) => {
-        // Delete Rec
-        // Invoke Refresh (or maybe update state directly)
-    }
-
-    const HandleWatch = (fundId) => {
-        // Send request to watch url
-        // Invoke Refresh (or maybe update state directly)
-    }
-
-    const Refresh = () => {
-        // Update refresh state
-        setRefresh(!refresh)
-    }
+// Export a function that accepts, recommendation list object, and handleWatch/Reject functions, 
+    // then prints the rec list to the DOM with handling buttons
+export const RecList = ({recs, HandleWatch, HandleReject}) => {
 
     return (
         <>
