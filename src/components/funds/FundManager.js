@@ -6,6 +6,5 @@ import { Settings } from "../../utils/Settings"
 
 // Export a function that fetches the user's watched funds
 export const getWatchList = () => {
-    const API = "http://localhost:8000"
-    return fetchIt(`${API}/funds/watchlist`)
+    return fetchIt(`${Settings.API}/funds/watchlist`)
 }
