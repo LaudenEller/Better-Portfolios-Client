@@ -3,10 +3,10 @@ import { User } from "../users/User"
 import { useParams } from "react-router-dom"
 import { RecList } from "../recommendations/RecommendationList"
 import { getUser } from "../users/UserManager"
-import { deleteRecommendations, getRecommendations } from "../recommendations/RecommendationManager"
+import { deleteRecommendation, deleteRecommendations, getRecommendations } from "../recommendations/RecommendationManager"
 import { updateUser } from "../users/UserManager"
-import { getWatchList } from "../funds/FundManager"
-import { Box, Typography } from "@mui/material"
+import { getWatchList, watchFund } from "../funds/FundManager"
+import { Box, DialogTitle, Typography } from "@mui/material"
 
 export const Profile = () => {
 
@@ -44,31 +44,32 @@ export const Profile = () => {
         () => {
             getUser(1) // Backend returns current user regardless of pk, so 1 = foo
                 .then(d => setUser(d))
-            },
-            [refreshUser]
-            )
-            
-            useEffect(() => {
-                getRecommendations()
-                .then((d => setRecs(d)))
         },
+        [refreshUser]
+    )
+
+    useEffect(() => {
+        getRecommendations()
+            .then((d => setRecs(d)))
+    },
 
         // Observe refresh state to rerender jsx with the updated recs from db # HELP: 
-            // Is it true that when refreshRecs goes from false to true, 
-            // this useEffect will invoke just the same as true to false?
+        // Is it true that when refreshRecs goes from false to true, 
+        // this useEffect will invoke just the same as true to false?
 
         [refreshRecs])
 
     const HandleReject = (recId) => {
         // Delete Rec
-        deleteRecommendations(recId)
-        // Invoke Refresh
-        .then(setRefreshRecs(!refreshRecs))
+        deleteRecommendation(recId)
+            // Invoke Refresh
+            .then(setRefreshRecs(!refreshRecs))
     }
 
-    const HandleWatch = (fundId) => {
-        getWatchList(fundId)
-        .then(setRefreshRecs(!refreshRecs))
+    const HandleWatch = (rec) => {
+        watchFund(rec.fund.id)
+            .then(deleteRecommendation(rec.id))
+            .then(setRefreshRecs(!refreshRecs))
     }
 
     // Updates state with input from the update user form
@@ -97,21 +98,24 @@ export const Profile = () => {
 
     return (
         <>
-        <section>
-            <Box>
-                <Typography>Profile</Typography>
+            <Box className="page_content_box">
+                <Box className="page_title_box">
+                    <h1>Portfolio</h1>
+                </Box>
+                <Box className="page_separator_box">
+                    <hr className="page_separator" />
+                </Box>
+                <Box>
+                    {/* // Render the user's profile */}
+                    {/* Pass refresh state, user, setRefresh, to User */}
+                    <User ChangeUserState={ChangeUserState} UpdateUser={UpdateUser} user={user} editForm={editForm} setEditForm={setEditForm} />
+                </Box>
+                <Box>
+                    {/* // Render the RecList */}
+                    {/* Pass refresh state, setRefresh,  to RecList */}
+                    <RecList recs={recs} refreshRecs={refreshRecs} setRefreshRecs={setRefreshRecs} HandleWatch={HandleWatch} HandleReject={HandleReject} />
+                </Box>
             </Box>
-            <Box>
-            {/* // Render the user's profile */}
-            {/* Pass refresh state, user, setRefresh, to User */}
-            <User ChangeUserState={ChangeUserState} UpdateUser={UpdateUser} user={user} editForm={editForm} setEditForm={setEditForm} />
-            </Box>
-            <Box>
-            {/* // Render the RecList */}
-            {/* Pass refresh state, setRefresh,  to RecList */}
-            <RecList recs={recs} refreshRecs={refreshRecs} setRefreshRecs={setRefreshRecs} HandleWatch={HandleWatch} HandleReject={HandleReject} />
-            </Box>
-        </section>
         </>
     )
 }

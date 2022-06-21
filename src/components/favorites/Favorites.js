@@ -1,3 +1,53 @@
+import { Box, Button, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
+import { getFavorites, unFave } from "../issuers/IssuerManager"
+
+
+export const FavoritesList = () => {
+    const [favorites, setFavorites] = useState()
+    const [refreshFaves, setRefreshFaves] = useState()
+    
+    useEffect(() => {
+        getFavorites()
+        .then(setFavorites)
+    },
+    [])
+    useEffect(() => {
+        getFavorites()
+        .then(setFavorites)
+    },
+    [refreshFaves])
+
+    const HandleUnfave = (IssuerId) => {
+        // Delete Rec
+        unFave(IssuerId)
+            // Invoke Refresh
+            .then(() => setRefreshFaves(!refreshFaves))
+    }
+
+    return (
+        <>
+       
+        <Box className="page_content_box">
+            <Box className="page_title_box">
+                <h1>Favorite Issuers</h1>
+            </Box>
+            <Box className="page_separator_box">
+                    <hr className="page_separator"/>
+                </Box>
+            <Box className="list_container">
+                {favorites?.map((f) => {
+                    return (<div key={`fav--${f.id}`}>
+                    <Typography>{f.name}</Typography>
+                    <Button variant="contained" onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
+                    </div>)
+                })}
+            </Box>
+        </Box>
+        </>
+    )
+}
+
 // Fetch the current user's favorite issuers
 // Render a list of those issuers to the DOM with a "remove" button
 // When an issuer is clicked on

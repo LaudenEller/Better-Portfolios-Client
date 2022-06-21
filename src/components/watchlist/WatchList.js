@@ -1,9 +1,13 @@
 
+import { Box, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { getWatchList } from "../funds/FundManager"
+import { NestedModal } from "../modal/Modal"
 
 export const WatchList = () => {
     const [funds, setFunds] = useState()
+    const [open, setOpen] = useState(false);
+    const [content, setContent] = useState({})
     
     // Fetch the current user's watch list
     useEffect(() => {
@@ -11,15 +15,38 @@ export const WatchList = () => {
         .then((d) => setFunds(d))
     },
     [])
+
+    const handleOpen = (issuer) => {
+        setContent(issuer)
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+        setOpen(false); 
+    };
     
     // Render that list to the DOM
     return (
         <>
-        <article className="list_container">
+         {
+            open != 0 ? <NestedModal open={open} content={content} handleClose={handleClose} handleOpen={handleOpen} />: ""
+        }
+        <Box className="page_content_box">
+            <Box className="page_title_box">
+                <h1>Watch List</h1>
+                </Box>
+                <Box className="page_separator_box">
+                    <hr className="page_separator"/>
+                </Box>
+        <Box className="list_container">
             {funds?.map((f) => {
-                return <div key={`fund--${f.id}`}> {f.name}</div>
+                return (<> 
+                <Typography onClick={() => handleOpen(f)}>{f.name}</Typography>
+                <Typography>{f.country.country}</Typography> 
+                </>)
             })}
-            </article>
+            </Box>
+            </Box>
         </>
     )
 }

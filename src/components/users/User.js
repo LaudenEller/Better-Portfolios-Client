@@ -1,4 +1,5 @@
 // Export a function that prints the current user's profile
+import { Box, Button, Typography } from "@mui/material";
 import { UpdateUserForm } from "./UpdateUserForm";
 import "./User.css"
 
@@ -19,16 +20,15 @@ export const User = ({ user, ChangeUserState, updatedUser, setUpdatedUser, Updat
             :
             <>
                 {/* When user clicks edit, render the user update form and pass it the user object*/}
-                <div>
-                    <div>User: {user?.first_name} {user?.last_name}</div>
-                    <div>Username: {user?.username}</div>
-                    <div>Email: {user?.email}</div>
-                </div>
-        <button onClick={
+                <Box>
+                    <Typography>Username: {user?.username}</Typography>
+                    <Typography>Email: {user?.email}</Typography>
+                </Box>
+        <Button onClick={
             () => {
                 setEditForm(!editForm)
             }
-        }>Update Email</button>
+        }>Update Email</Button>
         </>
     }
     </>
