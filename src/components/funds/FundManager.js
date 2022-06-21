@@ -8,3 +8,9 @@ import { Settings } from "../../utils/Settings"
 export const getWatchList = () => {
     return fetchIt(`${Settings.API}/funds/watchlist`)
 }
+export const watchFund = (fundId) => {
+    return fetchIt(`${Settings.API}/funds/${fundId}/watch`, 'post')
+}
+export const getFundList = () => {
+    return fetchIt(`${Settings.API}/funds`)
+}
