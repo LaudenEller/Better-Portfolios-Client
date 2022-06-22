@@ -21,8 +21,8 @@ export const RecModal = ({ content, recId, handleOpen, handleRecFund, openRec, }
     // const [open, setOpen] = useState(false);
     const [rec, updateRec] = useState(
         {
-            fundId: `${recId}`,
-            username: "",
+            fundId: parseInt(`${recId}`),
+            user: 0,
             note: ""
         }
     )
@@ -57,10 +57,10 @@ export const RecModal = ({ content, recId, handleOpen, handleRecFund, openRec, }
                                     required
                                     autoFocus
                                     className="form-control"
-                                    value={rec.username}
+                                    value={rec.user}
                                     onChange={(evt) => {
                                         const copy = { ...rec }
-                                        copy.username = evt.target.value
+                                        copy.user = parseInt(evt.target.value)
                                         updateRec(copy)
                                     }
                                     }

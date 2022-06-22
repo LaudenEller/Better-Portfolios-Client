@@ -14,3 +14,6 @@ export const getFundList = () => {
     return fetchIt(`${Settings.API}/funds`)
 }
 // Export a function that fetches funds matching the query params
+export const filterFunds = (filterString) => {
+    return fetchIt(`${Settings.API}${filterString}`)
+}

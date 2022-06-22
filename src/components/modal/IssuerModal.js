@@ -17,7 +17,7 @@ const style = {
     pb: 3,
 };
 
-export const IssuerModal = ({ openIssuer, handleClose, handleWatch, content }) => {
+export const IssuerModal = ({ openIssuer, handleClose, handleFavorite, content }) => {
 
     return (<>
         <div>
@@ -35,7 +35,7 @@ export const IssuerModal = ({ openIssuer, handleClose, handleWatch, content }) =
                                 <img style={{ width: "150px", height: "250px" }} src={content.image_url} alt="boohoo" className="img-responsive" />
                             </Box>
                             <Box>
-                                <p id="parent-modal-description">Domicile: {content.country.country}</p>
+                                <p id="parent-modal-description">Domicile: {content?.country?.country}</p>
                             </Box>
                             <Box>
                             {content?.funds?.map((fund) => {
@@ -44,11 +44,7 @@ export const IssuerModal = ({ openIssuer, handleClose, handleWatch, content }) =
                             </Box>
                         </Box>
                         <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
-                            {/* <ChildModal2 content={content} /> */}
-                            <Button>Watch Fund</Button>
-                            {/* passes fund id to the handleOpen function */}
-                            <Button onClick={() => handleWatch(content.id)}>Favorite</Button>
-                            <Button>See Issuer</Button>
+                            <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
                         </Box>
                     </Box>
             </Modal>

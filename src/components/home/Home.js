@@ -4,28 +4,52 @@
 // Render the fund list and a filter list to the DOM
 // Filter funds by filter list
 
-import { Box, getLinearProgressUtilityClass, Grid, Paper, styled, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import { Box, Grid, Paper, styled } from "@mui/material"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { getAssetClases, getIndustries, searchName } from "../filters/FiltersManager"
-import { getFundList } from "../funds/FundManager"
-import { getIssuerList } from "../issuers/IssuerManager"
+import { filterFunds, getFundList } from "../funds/FundManager"
+import { Fave, getIssuer, getIssuerList } from "../issuers/IssuerManager"
+import { AgGridReact } from 'ag-grid-react'
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
+import { getUsers } from "../users/UserManager"
+import { FundModal } from "../modal/FundModal"
+import { RecModal } from "../modal/RecModal"
+import { IssuerModal } from "../modal/IssuerModal"
+import { createRecommendation } from "../recommendations/RecommendationManager"
+
 
 export const Home = () => {
     const [funds, setFunds] = useState([])
+    const [users, setUsers] = useState([])
     const [issuers, setIssuers] = useState([])
     const [assets, setAssets] = useState([])
     const [industries, setIndustries] = useState([])
     const [industryChecks, setIndustryChecks] = useState({})
+    const [open, setOpen] = useState(false);
+    const [openIssuer, setOpenIssuer] = useState(false);
+    const [openRec, setOpenRec] = useState(false);
+    const [recId, setRecId] = useState(0)
+    const [content, setContent] = useState({})
+    const [issuer, setIssuer] = useState({})
+    const [columnDefs, setColumnDefs] = useState([
+        { field: "name" },
+        { field: "issuer.name" },
+        { field: "country.country" },
+        { field: "asset_rating" },
+        { field: "esg_rating" },
+        { field: "asset_class.asset_class" },
+    ])
     // const [filter, setFilterType] = useState(
     //     {
     //         type: "", value: ""
     //     })
     const [filter, setFilterType] = useState(
         {
-            name: "",
-            issuer: "",
-            assetclass: "",
-            industry: ""
+            name: "name=",
+            issuer: "issuer=",
+            assetclass: "assetclass=",
+            industry: "industry="
         }
     )
 
@@ -36,6 +60,11 @@ export const Home = () => {
         },
         []
     )
+    useEffect(() => {
+        getUsers()
+            .then(setUsers)
+    },
+        [])
     useEffect(
         () => {
             getIssuerList()
@@ -59,22 +88,105 @@ export const Home = () => {
     )
 
     // useEffect(() => {
-    //     getResources()
+    //     getResources2()
     // },
     //     [filter]
     // )
 
-    const handleChange = (id) => {
-        let copy = { ...filter }
-        copy.industry = copy.industry.concat(',' + id)
-        console.log(copy)
-        setFilterType(copy)
 
+    const defaultColDef = useMemo(() => ({
+        sortable: true,
+    }), [])
 
-        // const copy = { ...industryChecks }
-        // copy[domEvent.target.value] = !copy[domEvent.target.value]
-        // setIndustryChecks(copy)
+    // change filter.type to an object
+    // Add a key of "type" and value from each filter form that is "on"
+    // Add query_param and associated value to object in state
+
+    // Whenever the actual fetch goes out, attach query string from object
+    // Use for - in loop that builds query string by matching the keys with their values in the object
+    // and attaches each key-value pair strings in a query parameter
+
+    const handleFundOpen = (f) => {
+        setContent(f)
+        setOpen(true);
     }
+
+    const handleOpenIssuer = (x) => {
+        setOpen(false);
+        getIssuer(x)
+            .then((i) => setContent(i))
+            .then(() => setOpenIssuer(!openIssuer))
+    };
+
+    const handleCheckBoxChange = (id) => {
+            if (filter.industry === "industry="){
+                let copy = { ...filter }
+                copy.industry = copy.industry + id
+                console.log(copy)
+                setFilterType(copy)}
+            else if (filter.industry.search(id) > 0) {
+                    let copy = { ...filter }
+                    copy.industry = copy.industry.replace(id, '')
+                    console.log(copy)
+                    setFilterType(copy)}
+            else {
+                    let copy = { ...filter }
+                    copy.industry = copy.industry + ',' + id
+                    console.log(copy)
+                setFilterType(copy)}
+        }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpenRec = (fundId) => {
+        setOpen(false);
+        setRecId(fundId)
+        setContent(users)
+        setOpenRec(true)
+    }
+
+    const handleRecFund = (rec) => {
+        setOpenRec(false)
+        // HELP: How come this returns from the API as "not found"?
+        createRecommendation(rec)
+    }
+
+    const handleFavorite = (issuerId) => {
+        setOpenIssuer(false)
+        Fave(issuerId)
+    }
+
+    // const copy = { ...industryChecks }
+    // copy[domEvent.target.value] = !copy[domEvent.target.value]
+    // setIndustryChecks(copy)
+
+    // send full query param strings to state
+
+    const getResources2 = () => {
+        // Build a fetch call string
+        const queryString = "/funds?"
+        // Iterate over state
+       for (const key in filter) {
+        if (queryString === "/funds?") {
+            if (key.value.length > 0) {
+            queryString = queryString + key.value
+        }}
+        else {
+            // When the string isn't empty
+            if (key.value.length > 0) {
+                // Add string with an & before it to query call string
+                queryString = queryString + '&' + key.value
+        }
+        // Send string to API
+        filterFunds(queryString)
+        // Render results to DOM
+        .then(setFunds)
+        }
+
+    }
+}
 
     const getResources = () => {
         // Parse the filter object and construct a query string
@@ -94,13 +206,18 @@ export const Home = () => {
         // }
     }
 
-    // change filter.type to an object
-    // Add a key of "type" and value from each filter form that is "on"
-    // Add query_param and associated value to object in state
-
-    // Whenever the actual fetch goes out, attach query string from object
-    // Use for - in loop that builds query string by matching the keys with their values in the object
-    // and attaches each key-value pair strings in a query parameter
+    const cellClickedListener = useCallback(e => {
+        // Check the incoming data
+        console.log(e)
+        if (e.column.colId === "name") {
+            handleFundOpen(e.data)
+            // When the data is a fund, open the fund modal
+        }
+        else if (e.column.colId === "issuer.name") {
+            // When the data is an issuer, open the issuer modal
+            handleOpenIssuer(e.data.issuer.id)
+        }
+    })
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -111,6 +228,15 @@ export const Home = () => {
     }));
 
     return (<>
+        {
+            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} /> : ""
+        }
+        {
+            openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
+        }
+        {
+            openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} /> : ""
+        }
         <Box className="page_content_box">
             <Box className="page_title_box">
                 <h1>Better Portfolios</h1>
@@ -121,7 +247,7 @@ export const Home = () => {
             <Box className="grid_box" sx={{ flexGrow: 1 }}>
                 <Grid container spacing={1}>
                     {/* container for filters */}
-                    <Grid item container xs={4} className="filter_box" direction="column">
+                    <Grid item container xs={3} className="filter_box" direction="column">
                         {/* filter by name jsx */}
                         <Grid item className="filter--search">
                             <fieldset id="nameSearchField">
@@ -134,7 +260,7 @@ export const Home = () => {
                                     <button className='button' onClick={e => {
                                         e.preventDefault()
                                         let copy = { ...filter }
-                                        copy.name = e.currentTarget.previousElementSibling.value
+                                        copy.name += e.currentTarget.previousElementSibling.value
                                         console.log(copy)
                                         setFilterType(copy)
                                         // let filterToSet = {
@@ -158,7 +284,7 @@ export const Home = () => {
                                     onChange={e => {
                                         e.preventDefault()
                                         let copy = { ...filter }
-                                        copy.issuer = e.target.value
+                                        copy.issuer += e.target.value
                                         console.log(copy)
                                         setFilterType(copy)
                                         // let copy = JSON.parse(JSON.stringify(filter))
@@ -195,7 +321,7 @@ export const Home = () => {
                                         if (e.target.value != "0") {
                                             let copy = JSON.parse(JSON.stringify(filter))
                                             copy.type = "asset_class"
-                                            copy.value = e.target.value
+                                            copy.value += e.target.value
                                             setFilterType(copy)
                                         }
                                     }}
@@ -224,14 +350,17 @@ export const Home = () => {
                                                     type="checkbox"
                                                     checked={industryChecks[`${i.id}`]}
                                                     value={i.id}
-                                                    onChange={e => handleChange(e.target.value)}
-                                                    // onChange={e => {
-                                                    //     e.preventDefault()
-                                                    //         let copy = { ...filter }
-                                                    //         copy.industry += json.stringify(i.id)
-                                                    //         setFilterType(copy)
+                                                    // in the onChange event, check industryChecks to see if the passed in id matches an id on that object
+                                                        // if so
+                                                    onChange={
+                                                        e => {handleCheckBoxChange(e.target.value)}}
+                                                // onChange={e => {
+                                                //     e.preventDefault()
+                                                //         let copy = { ...filter }
+                                                //         copy.industry += json.stringify(i.id)
+                                                //         setFilterType(copy)
 
-                                                    // }}
+                                                // }}
                                                 />
                                             </div>
                                         </div>
@@ -240,111 +369,15 @@ export const Home = () => {
                         </Grid>
                     </Grid>
                     {/* container for returned funds */}
-                    <Grid item container className="results_box" xs={8}>
-                        {/* container for fund names */}
-                        {/* HELP: Why isn't this printing fund names to the  */}
-                        <Grid item xs={2} >
-                            <Grid sx={{ fontWeight: 'bold' }}>Name{funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><Paper>{f.name}</Paper></Paper>
-                            })}</Grid>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Grid sx={{ fontWeight: 'bold' }}>Asset Class {funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><div>{f.asset_class.asset_class}</div></Paper>
-                            })}</Grid>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Grid sx={{ fontWeight: 'bold' }}>Asset Rating {funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><div>{f.asset_rating}</div></Paper>
-                            })}</Grid>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Grid sx={{ fontWeight: 'bold' }}>Domicile {funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><div>{f.country.country}</div></Paper>
-                            })}</Grid>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Grid sx={{ fontWeight: 'bold' }}>Industry {funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><div>{f.industry.industry}</div></Paper>
-                            })}</Grid>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Grid sx={{ fontWeight: 'bold' }}>Issuer {funds?.map((f) => {
-                                return <Paper sx={
-                                    {
-
-                                        // position: 'fixed',
-                                        // top: '5px',
-                                        width: '100px',
-                                        overflow: 'auto',
-                                        height: '35px',
-                                        border: '1px solid black',
-                                        fontWeight: 250
-
-                                    }
-                                } className="fund--name"><div>{f.issuer.name}</div></Paper>
-                            })}</Grid>
-                        </Grid>
+                    <Grid item className="ag-theme-alpine" sx={{ height: 500 }} xs={9}>
+                        <AgGridReact
+                            // HELP: How to pass data from the cell to the function?
+                            onCellClicked={cellClickedListener}
+                            rowData={funds}
+                            columnDefs={columnDefs}
+                            defaultColDef={defaultColDef}
+                            animateRows={true}
+                        />
                     </Grid>
                 </Grid>
             </Box>
