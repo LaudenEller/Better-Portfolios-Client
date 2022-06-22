@@ -2,50 +2,93 @@
 import { Box, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { getWatchList } from "../funds/FundManager"
-import { NestedModal } from "../modal/Modal"
+import { getIssuer, getIssuerList } from "../issuers/IssuerManager"
+import { FundModal, NestedModal } from "../modal/FundModal"
+import { IssuerModal } from "../modal/IssuerModal"
+import { RecModal } from "../modal/RecModal"
+import { createRecommendation } from "../recommendations/RecommendationManager"
+import { getUsers } from "../users/UserManager"
 
 export const WatchList = () => {
     const [funds, setFunds] = useState()
     const [open, setOpen] = useState(false);
+    const [openRec, setOpenRec] = useState(false);
+    const [recId, setRecId] = useState(0)
+    const [openIssuer, setOpenIssuer] = useState(false);
     const [content, setContent] = useState({})
-    
+    const [users, setUsers] = useState([])
+    const [issuer, setIssuer] = useState({})
+
+
     // Fetch the current user's watch list
     useEffect(() => {
         getWatchList()
-        .then((d) => setFunds(d))
+            .then((d) => setFunds(d))
     },
-    [])
+        [])
 
-    const handleOpen = (issuer) => {
-        setContent(issuer)
-        setOpen(true);
+    useEffect(() => {
+        getUsers()
+            .then(setUsers)
+    },
+        [])
+
+    const handleFundOpen = (f) => {
+        setContent(f)
+        setOpen(!open);
+    }
+    const handleOpenRec = (fundId) => {
+        setOpen(!open);
+        setRecId(fundId)
+        setContent(users)
+        setOpenRec(!openRec)
+    }
+
+    const handleOpenIssuer = (x) => {
+        setOpen(!open)
+        getIssuer(x)
+            .then((i) => setIssuer(i))
+            .then(() => setContent(issuer))
+            .then(() => setOpenIssuer(!openIssuer))
     };
-    
+
+    const handleRecFund = (rec) => {
+        setOpenRec(!openRec)
+        // HELP: How come this returns from the API as "not found"?
+        createRecommendation(rec)
+    }
+
     const handleClose = () => {
-        setOpen(false); 
+        setOpen(!open);
     };
-    
+
     // Render that list to the DOM
     return (
         <>
-         {
-            open != 0 ? <NestedModal open={open} content={content} handleClose={handleClose} handleOpen={handleOpen} />: ""
-        }
-        <Box className="page_content_box">
-            <Box className="page_title_box">
-                <h1>Watch List</h1>
+            {
+                open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} /> : ""
+            }
+            {
+                openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
+            }
+            {
+                openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} /> : ""
+            }
+            <Box className="page_content_box">
+                <Box className="page_title_box">
+                    <h1>Watched Funds</h1>
                 </Box>
                 <Box className="page_separator_box">
-                    <hr className="page_separator"/>
+                    <hr className="page_separator" />
                 </Box>
-        <Box className="list_container">
-            {funds?.map((f) => {
-                return (<> 
-                <Typography onClick={() => handleOpen(f)}>{f.name}</Typography>
-                <Typography>{f.country.country}</Typography> 
-                </>)
-            })}
-            </Box>
+                <Box className="list_container">
+                    {funds?.map((f) => {
+                        return (<>
+                            <Typography onClick={() => handleFundOpen(f)}>{f.name}</Typography>
+                            <Typography>{f.country.country}</Typography>
+                        </>)
+                    })}
+                </Box>
             </Box>
         </>
     )

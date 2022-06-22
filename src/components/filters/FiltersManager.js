@@ -4,11 +4,21 @@ import { Settings } from "../../utils/Settings"
 // Get asset classes
 // Get countries
 // Get ESG Concerns
+// Get ESG Ratings
+export const getEsgratings = () => {
+    return fetchIt(`${Settings.API}/esg`)
+}
 // Get industries
+export const getIndustries = () => {
+    return fetchIt(`${Settings.API}/industries`)
+}
 // Get issuers
 export const getIssuers = () => {
     return fetchIt(`${Settings.API}/issuers`)
 }
 export const getAssetClases = () => {
     return fetchIt(`${Settings.API}/assetclasses`)
+}
+export const searchName = (searchText) => {
+    return fetchIt(`${Settings.API}/funds?name=${searchText}`)
 }

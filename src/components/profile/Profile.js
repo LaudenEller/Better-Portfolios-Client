@@ -100,7 +100,7 @@ export const Profile = () => {
         <>
             <Box className="page_content_box">
                 <Box className="page_title_box">
-                    <h1>Portfolio</h1>
+                    <h1>Profile</h1>
                 </Box>
                 <Box className="page_separator_box">
                     <hr className="page_separator" />
