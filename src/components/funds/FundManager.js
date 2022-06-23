@@ -8,7 +8,10 @@ export const getWatchList = () => {
     return fetchIt(`${Settings.API}/funds/watchlist`)
 }
 export const watchFund = (fundId) => {
-    return fetchIt(`${Settings.API}/funds/${fundId}/watch`, 'post')
+    return fetchIt(`${Settings.API}/funds/${fundId}/watch`, 'POST')
+}
+export const unWatchFund = (fundId) => {
+    return fetchIt(`${Settings.API}/funds/${fundId}/unwatch`, 'DELETE')
 }
 export const getFundList = () => {
     return fetchIt(`${Settings.API}/funds`)

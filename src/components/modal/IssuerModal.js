@@ -64,14 +64,14 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
                         <h2 onTou style={{ alignSelf: "center" }} id="parent-modal-title">{content?.name}</h2>
                         <Box style={{ display: "flex", justifyContent: "space-evenly" }}>
                             <Box style={{ alignSelf: "flex-start" }} >
-                                <img style={{ width: "150px", height: "250px" }} src={content.image_url} alt="boohoo" className="img-responsive" />
+                                <img style={{ width: "150px", height: "250px" }} src={content?.image_url} alt="boohoo" className="img-responsive" />
                             </Box>
                             <Box style={{ display: 'flex', flexDirection: 'column' }}>
                             <Box>
                                 <p id="parent-modal-description">Domicile: {content?.country?.country}</p>
                             </Box>
                             <Box>
-                                {content?.funds.map((fund) => {
+                                {content?.funds?.map((fund) => {
                                     return <img style={{ width: "25px", height: "25px" }} src={fund.image_url} alt="boohoo" className="img-responsive" />
                                 })}
                             </Box>
@@ -79,9 +79,9 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
                     </Box>
                     <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
                         {faveButton ?
-                            <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
+                            <Button onClick={() => handleFavorite(content)}>Favorite</Button>
                             :
-                            <Button onClick={() => handleUnFavorite(content.id)}>Unfavorite</Button>
+                            <Button onClick={() => handleUnFavorite(content)}>Unfavorite</Button>
                         }
                     </Box>
                     </Box>

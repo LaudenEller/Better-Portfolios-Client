@@ -17,7 +17,7 @@ const style = {
     pb: 3,
 };
 
-export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, content, handleWatch }) => {
+export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, content, handleWatch, handleUnWatch, watchButton }) => {
 
     return (<>
         <div>
@@ -45,7 +45,12 @@ export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, 
                         </Box>
                         <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
                             {/* <ChildModal2 content={content} /> */}
-                            <Button onClick={() => handleWatch(content.id)}>Watch Fund</Button>
+                            {/* <Button onClick={() => handleWatch(content.id)}>Watch Fund</Button> */}
+                            {watchButton ?
+                            <Button onClick={() => handleWatch(content.id)}>Watch</Button>
+                            :
+                            <Button onClick={() => handleUnWatch(content.id)}>Unwatch</Button>
+                        }
                             {/* passes fund id to the handleOpen function */}
                             <Button onClick={() => handleOpenRec(content.id)}>Recommend Fund</Button>
                             <Button onClick={() => handleOpenIssuer(content.issuer.id)}>See Issuer</Button>

@@ -8,7 +8,7 @@ export const createRecommendation = (rec) => {
 
 // Remove rec
 export const deleteRecommendation = (recId) => {
-    return fetchIt(`${Settings.API}/funds/${recId}/unrec`, "Delete",)
+    return fetchIt(`${Settings.API}/recs/${recId}`, "DELETE")
   }
 
 // Get user's recs
