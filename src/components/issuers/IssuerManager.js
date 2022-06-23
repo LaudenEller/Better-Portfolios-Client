@@ -8,6 +8,10 @@ export const getIssuerList = () => {
     return fetchIt(`${Settings.API}/issuers`)
 }
 
+export const getIssuer = (issuerId) => {
+    return fetchIt(`${Settings.API}/issuers/${issuerId}`)
+}
+
 export const getFavorites = () => {
     return fetchIt(`${Settings.API}/issuers/favoritelist`)
 }

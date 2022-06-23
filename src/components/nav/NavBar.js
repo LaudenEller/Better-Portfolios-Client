@@ -20,18 +20,6 @@ export const NavBar = () => {
           }
           } />
         <div onClick={() => {
-          history.push("/")
-        }} style={{ textDecoration: "none", margin: "0.5em" }} to="/">
-          <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
-            Home
-          </Typography></div>
-        <div onClick={() => {
-          history.push("/profile")
-        }} style={{ textDecoration: "none", margin: "0.5em" }}>
-          <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
-            Profile
-          </Typography></div>
-        <div onClick={() => {
           history.push("/watch")
         }} style={{ textDecoration: "none", margin: "0.5em" }}>
           <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
@@ -42,6 +30,12 @@ export const NavBar = () => {
         }} style={{ textDecoration: "none", margin: "0.5em" }}>
           <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
             Favorites
+          </Typography></div>
+        <div onClick={() => {
+          history.push("/profile")
+        }} style={{ textDecoration: "none", margin: "0.5em" }}>
+          <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
+            Profile
           </Typography></div>
         {
           localStorage.getItem("auth_token") !== null ?
@@ -68,7 +62,8 @@ export const NavBar = () => {
                     ":hover": {
                       background: "grey"
                     },
-                    margin: "0.5em"
+                    margin: "0.1em",
+                    height: "1px"
                   }}>
                   Login/Register
                 </Button>
@@ -76,7 +71,7 @@ export const NavBar = () => {
             </>
         }
       </Box >
-      <hr />
+      <hr/>
     </nav >
   )
 }

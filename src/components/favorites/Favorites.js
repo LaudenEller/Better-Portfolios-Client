@@ -6,17 +6,17 @@ import { getFavorites, unFave } from "../issuers/IssuerManager"
 export const FavoritesList = () => {
     const [favorites, setFavorites] = useState()
     const [refreshFaves, setRefreshFaves] = useState()
-    
+
     useEffect(() => {
         getFavorites()
-        .then(setFavorites)
+            .then(setFavorites)
     },
-    [])
+        [])
     useEffect(() => {
         getFavorites()
-        .then(setFavorites)
+            .then(setFavorites)
     },
-    [refreshFaves])
+        [refreshFaves])
 
     const HandleUnfave = (IssuerId) => {
         // Delete Rec
@@ -27,23 +27,39 @@ export const FavoritesList = () => {
 
     return (
         <>
-       
-        <Box className="page_content_box">
-            <Box className="page_title_box">
-                <h1>Favorite Issuers</h1>
-            </Box>
-            <Box className="page_separator_box">
-                    <hr className="page_separator"/>
+
+            <Box className="page_content_box">
+                <Box className="page_title_box">
+                    <h1>Favorite Issuers</h1>
                 </Box>
-            <Box className="list_container">
-                {favorites?.map((f) => {
-                    return (<div key={`fav--${f.id}`}>
-                    <Typography>{f.name}</Typography>
-                    <Button variant="contained" onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
-                    </div>)
-                })}
+                <Box className="page_separator_box">
+                    <hr className="page_separator" />
+                </Box>
+                <Box className="list_container">
+                    {favorites?.map((f) => {
+                        return (<>
+                        <Box
+                        sx={{
+                            border: "1px solid black",
+                            margin: "1em"
+                        }}>
+                            <Typography>{f.name}</Typography>
+                            <Typography>{f.country.country}</Typography>
+                            <Box key={`fav--${f.id}`}
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "flex-start"
+                                }}>
+                                <Button variant="contained" onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
+                            </Box>
+                            </Box>
+                            {/* <Typography>{f.image}</Typography> HELP: How can I get the image showing in the DOM? */}
+                        </>
+                        )
+                    })}
+                </Box>
             </Box>
-        </Box>
         </>
     )
 }

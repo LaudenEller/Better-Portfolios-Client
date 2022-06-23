@@ -3,12 +3,12 @@ import { Settings } from "../../utils/Settings";
 
 // Add rec
 export const createRecommendation = (rec) => {
-    return fetchIt(`${Settings.API}/funds/recommend`, "post", JSON.stringify(rec))
+    return fetchIt(`${Settings.API}/funds/rec`, "POST", JSON.stringify(rec))
   }
 
 // Remove rec
 export const deleteRecommendation = (recId) => {
-    return fetchIt(`${Settings.API}/funds/${recId}/recommend`, "delete",)
+    return fetchIt(`${Settings.API}/funds/${recId}/unrec`, "Delete",)
   }
 
 // Get user's recs

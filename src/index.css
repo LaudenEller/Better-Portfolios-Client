@@ -7,6 +7,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.page_title_box {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.page_separator {
+  height: 3px;
+  width: 100%;
+  background-color: #7db343;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
