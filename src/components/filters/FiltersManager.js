@@ -5,8 +5,11 @@ import { Settings } from "../../utils/Settings"
 // Get countries
 // Get ESG Concerns
 // Get ESG Ratings
-export const getEsgratings = () => {
-    return fetchIt(`${Settings.API}/esg`)
+export const getCountries = () => {
+    return fetchIt(`${Settings.API}/countries`)
+}
+export const getEsgConcerns = () => {
+    return fetchIt(`${Settings.API}/esgconcerns`)
 }
 // Get industries
 export const getIndustries = () => {

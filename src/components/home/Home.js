@@ -1,22 +1,16 @@
-
-
-// Fetch a default set of funds and print them in a grid format
-// Render the fund list and a filter list to the DOM
-// Filter funds by filter list
-
-import { Box, Grid, Paper, styled } from "@mui/material"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { getAssetClases, getIndustries, searchName } from "../filters/FiltersManager"
-import { filterFunds, getFundList } from "../funds/FundManager"
-import { Fave, getIssuer, getIssuerList } from "../issuers/IssuerManager"
-import { AgGridReact } from 'ag-grid-react'
-import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
+import { Box, Grid, Paper, styled, Typography } from "@mui/material"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { getAssetClases, getCountries, getEsgConcerns, getIndustries, searchName } from "../filters/FiltersManager"
+import { filterFunds, getFundList, watchFund } from "../funds/FundManager"
+import { Fave, getIssuer, getIssuerList, unFave } from "../issuers/IssuerManager"
 import { getUsers } from "../users/UserManager"
 import { FundModal } from "../modal/FundModal"
 import { RecModal } from "../modal/RecModal"
 import { IssuerModal } from "../modal/IssuerModal"
 import { createRecommendation } from "../recommendations/RecommendationManager"
+import { AgGridReact } from 'ag-grid-react'
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 
 
 export const Home = () => {
@@ -25,13 +19,15 @@ export const Home = () => {
     const [issuers, setIssuers] = useState([])
     const [assets, setAssets] = useState([])
     const [industries, setIndustries] = useState([])
-    const [industryChecks, setIndustryChecks] = useState({})
+    const [countries, setCountries] = useState([])
+    const [esgConcerns, setEsgConcerns] = useState([])
+    const [concernChecks, setConcernChecks] = useState({})
     const [open, setOpen] = useState(false);
     const [openIssuer, setOpenIssuer] = useState(false);
     const [openRec, setOpenRec] = useState(false);
     const [recId, setRecId] = useState(0)
     const [content, setContent] = useState({})
-    const [issuer, setIssuer] = useState({})
+    const [faveButton, setFaveButton] = useState(true)
     const [columnDefs, setColumnDefs] = useState([
         { field: "name" },
         { field: "issuer.name" },
@@ -39,20 +35,28 @@ export const Home = () => {
         { field: "asset_rating" },
         { field: "esg_rating" },
         { field: "asset_class.asset_class" },
+        { field: "industry.industry" },
+        { field: "esg_concern.concern" },
+        // Add a grouped field for the esg concerns 
     ])
-    // const [filter, setFilterType] = useState(
-    //     {
-    //         type: "", value: ""
-    //     })
-    const [filter, setFilterType] = useState(
+    const [filter, setFilter] = useState(
         {
-            name: "name=",
-            issuer: "issuer=",
-            assetclass: "assetclass=",
-            industry: "industry="
+            name: [],
+            issuer: [],
+            assetclass: [],
+            industry: [],
+            country: [],
+            esg: []
         }
     )
 
+    // const [showModal, setShowModal] = useState(false)
+
+    useEffect(() => {
+        getUsers()
+            .then(setUsers)
+    },
+        [])
     useEffect(
         () => {
             getFundList()
@@ -60,11 +64,6 @@ export const Home = () => {
         },
         []
     )
-    useEffect(() => {
-        getUsers()
-            .then(setUsers)
-    },
-        [])
     useEffect(
         () => {
             getIssuerList()
@@ -81,30 +80,31 @@ export const Home = () => {
     )
     useEffect(
         () => {
+            getCountries()
+                .then(setCountries)
+        },
+        []
+    )
+    useEffect(
+        () => {
             getAssetClases()
                 .then(setAssets)
         },
         []
     )
+    useEffect(
+        () => {
+            getEsgConcerns()
+                .then(setEsgConcerns)
+        },
+        []
+    )
 
-    // useEffect(() => {
-    //     getResources2()
-    // },
-    //     [filter]
-    // )
-
-
-    const defaultColDef = useMemo(() => ({
-        sortable: true,
-    }), [])
-
-    // change filter.type to an object
-    // Add a key of "type" and value from each filter form that is "on"
-    // Add query_param and associated value to object in state
-
-    // Whenever the actual fetch goes out, attach query string from object
-    // Use for - in loop that builds query string by matching the keys with their values in the object
-    // and attaches each key-value pair strings in a query parameter
+    useEffect(() => {
+        getResources()
+    },
+        [filter]
+    )
 
     const handleFundOpen = (f) => {
         setContent(f)
@@ -119,25 +119,23 @@ export const Home = () => {
     };
 
     const handleCheckBoxChange = (id) => {
-            if (filter.industry === "industry="){
-                let copy = { ...filter }
-                copy.industry = copy.industry + id
-                console.log(copy)
-                setFilterType(copy)}
-            else if (filter.industry.search(id) > 0) {
-                    let copy = { ...filter }
-                    copy.industry = copy.industry.replace(id, '')
-                    console.log(copy)
-                    setFilterType(copy)}
-            else {
-                    let copy = { ...filter }
-                    copy.industry = copy.industry + ',' + id
-                    console.log(copy)
-                setFilterType(copy)}
+        let copy = { ...filter }
+        if (copy['esg'].includes(id)) {
+            copy.esg.splice(id)
+            console.log(copy)
+            setFilter(copy)
         }
+        else {
+            copy.esg.push(id)
+            console.log(copy)
+            setFilter(copy)
+        }
+    }
 
     const handleClose = () => {
         setOpen(false);
+        setOpenRec(false);
+        setOpenIssuer(false);
     };
 
     const handleOpenRec = (fundId) => {
@@ -149,62 +147,73 @@ export const Home = () => {
 
     const handleRecFund = (rec) => {
         setOpenRec(false)
-        // HELP: How come this returns from the API as "not found"?
         createRecommendation(rec)
     }
 
     const handleFavorite = (issuerId) => {
-        setOpenIssuer(false)
+        setFaveButton(!faveButton)
         Fave(issuerId)
+        setOpenIssuer(false)
+    }
+    const handleUnFavorite = (issuerId) => {
+        setFaveButton(!faveButton)
+        unFave(issuerId)
+        setOpenIssuer(false)
     }
 
-    // const copy = { ...industryChecks }
-    // copy[domEvent.target.value] = !copy[domEvent.target.value]
-    // setIndustryChecks(copy)
-
-    // send full query param strings to state
-
-    const getResources2 = () => {
-        // Build a fetch call string
-        const queryString = "/funds?"
-        // Iterate over state
-       for (const key in filter) {
-        if (queryString === "/funds?") {
-            if (key.value.length > 0) {
-            queryString = queryString + key.value
-        }}
-        else {
-            // When the string isn't empty
-            if (key.value.length > 0) {
-                // Add string with an & before it to query call string
-                queryString = queryString + '&' + key.value
-        }
-        // Send string to API
-        filterFunds(queryString)
-        // Render results to DOM
-        .then(setFunds)
-        }
-
+    const handleWatch = (fundId) => {
+        watchFund(fundId)
+        setOpen(false)
     }
-}
+
+    const resetFilter = () => {
+        setFilter(
+            {
+                name: [],
+                issuer: [],
+                assetclass: [],
+                industry: [],
+                esg: []
+            }
+        )
+        setConcernChecks([])
+    }
 
     const getResources = () => {
-        // Parse the filter object and construct a query string
-        // Send query param fetch
-        if (filter.type === "all") {
-            getFundList()
-                .then(setFunds)
+        let queryString = "/funds?"
+        for (let key in filter) {
+            if (filter[key].length > 0) {
+                if (queryString === "/funds?") {
+                    queryString += `${key}=`
+                }
+                else {
+                    queryString += `&${key}=`
+                }
+                if (key === "esg") {
+                    for (let i = 0; i < filter.esg.length; i++) {
+                        if (filter.esg[filter.esg.length - 1] === filter.esg[i]) {
+                            queryString += `${filter.esg[i]}`
+                        }
+                        else {
+                            queryString += `${filter.esg[i]},`
+                        }
+                    }
+                }
+                else {
+                    filter[key].forEach((i) => {
+                        queryString += `${i}`
+                    })
+                }
+            }
         }
-        else if (filter.type === "name") {
-            // get funds whose name starts with the value sent from the search input
-            searchName(filter.value)
-                .then(setFunds)
-        }
-        // if (filter.type === "asset_class") {
-        //     getFundList()
-        //         .then(setFunds)
-        // }
+        filterFunds(queryString)
+            .then(setFunds)
     }
+
+    const defaultColDef = useMemo(() => ({
+        sortable: true,
+        resizable: true
+    }), [])
 
     const cellClickedListener = useCallback(e => {
         // Check the incoming data
@@ -219,23 +228,15 @@ export const Home = () => {
         }
     })
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
-
     return (<>
         {
-            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} /> : ""
+            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} handleWatch={handleWatch} /> : ""
         }
         {
             openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
         }
         {
-            openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} /> : ""
+            openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} handleUnFavorite={handleUnFavorite} faveButton={faveButton} /> : ""
         }
         <Box className="page_content_box">
             <Box className="page_title_box">
@@ -260,14 +261,14 @@ export const Home = () => {
                                     <button className='button' onClick={e => {
                                         e.preventDefault()
                                         let copy = { ...filter }
-                                        copy.name += e.currentTarget.previousElementSibling.value
+                                        copy.name.push(e.currentTarget.previousElementSibling.value)
                                         console.log(copy)
-                                        setFilterType(copy)
+                                        setFilter(copy)
                                         // let filterToSet = {
                                         //     type: "name",
                                         //     value: e.currentTarget.previousElementSibling.value
                                         // }
-                                        // setFilterType(filterToSet)
+                                        // setFilter(filterToSet)
                                     }}>
                                         <label htmlFor="searchButton">Search</label>
                                     </button>
@@ -284,13 +285,13 @@ export const Home = () => {
                                     onChange={e => {
                                         e.preventDefault()
                                         let copy = { ...filter }
-                                        copy.issuer += e.target.value
+                                        copy.issuer.push(e.target.value)
                                         console.log(copy)
-                                        setFilterType(copy)
+                                        setFilter(copy)
                                         // let copy = JSON.parse(JSON.stringify(filter))
                                         // copy.type = "issuer"
                                         // copy.value = e.target.value
-                                        // setFilterType(copy)
+                                        // setFilter(copy)
 
                                     }}
                                 >
@@ -308,30 +309,25 @@ export const Home = () => {
                             </fieldset>
                         </Grid>
                         <Grid item className="filter--asset_class">
-                            {/* filter by issuer jsx */}
+                            {/* filter by asset class jsx */}
                             <fieldset>
                                 <select
                                     className="asset_class_dropdown"
                                     name="asset_class_id"
-                                    // TODO I need the value to target a key-value pair on the filter object
-                                    // HELP: What does this line do?
-                                    value={filter.type === "asset_class" ? filter.value : "0"}
                                     onChange={e => {
                                         e.preventDefault()
-                                        if (e.target.value != "0") {
-                                            let copy = JSON.parse(JSON.stringify(filter))
-                                            copy.type = "asset_class"
-                                            copy.value += e.target.value
-                                            setFilterType(copy)
-                                        }
+                                        let copy = { ...filter }
+                                        copy.assetclass.push(e.target.value)
+                                        console.log(copy)
+                                        setFilter(copy)
                                     }}
                                 >
-                                    <option name="asset_classId" hidden value="0">
+                                    <option name="asset_class_id" hidden value="0">
                                         Filter By asset class
                                     </option>
                                     {assets?.map((a) => {
                                         return (
-                                            <option key={a.id} name="asset_classId" value={a.id}>
+                                            <option key={a.id} name="asset_class_id" value={a.id}>
                                                 {a.asset_class}
                                             </option>
                                         );
@@ -341,37 +337,83 @@ export const Home = () => {
                         </Grid>
                         <Grid item className="filter--industry">
                             <fieldset className="form-group">
-                                {industries?.map((i) => {
+                                <select
+                                    className="industry_dropdown"
+                                    name="industry_id"
+                                    onChange={e => {
+                                        e.preventDefault()
+                                        let copy = { ...filter }
+                                        copy.industry.push(e.target.value)
+                                        setFilter(copy)
+                                    }}
+                                >
+                                    <option name="industry_id" hidden value="0">
+                                        Filter By industry
+                                    </option>
+                                    {industries?.map((i) => {
+                                        return (
+                                            <option key={i.id} name="industry_id" value={i.id}>
+                                                {i.industry}
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </fieldset>
+                        </Grid>
+                        <Grid item className="filter--country">
+                            <fieldset className="form-group">
+                                <select
+                                    className="country_dropdown"
+                                    name="country_id"
+                                    onChange={e => {
+                                        e.preventDefault()
+                                        let copy = { ...filter }
+                                        copy.country.push(e.target.value)
+                                        setFilter(copy)
+                                    }}
+                                >
+                                    <option name="country_id" hidden value="0">
+                                        Filter By country
+                                    </option>
+                                    {countries?.map((c) => {
+                                        return (
+                                            <option key={c.id} name="country_id" value={c.id}>
+                                                {c.country}
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </fieldset>
+                        </Grid>
+                        <Grid item className="filter--esg">
+                            <fieldset className="form-group">
+                                <Typography sx={{ fontWeight: "bold" }}>Filter by ESG Sector</Typography>
+                                {esgConcerns?.map((ec) => {
                                     return (
-                                        <div className="industryCheckBox" key={`industryCheckBox--${i.id}`}>
-                                            <div autoComplete="off" noValidate className="div">
-                                                <label>{i.industry}</label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={industryChecks[`${i.id}`]}
-                                                    value={i.id}
-                                                    // in the onChange event, check industryChecks to see if the passed in id matches an id on that object
-                                                        // if so
-                                                    onChange={
-                                                        e => {handleCheckBoxChange(e.target.value)}}
-                                                // onChange={e => {
-                                                //     e.preventDefault()
-                                                //         let copy = { ...filter }
-                                                //         copy.industry += json.stringify(i.id)
-                                                //         setFilterType(copy)
-
-                                                // }}
-                                                />
+                                        <>
+                                            <div className="esgCheckBox" key={`esgCheckBox--${ec.id}`}>
+                                                <div autoComplete="off" noValidate className="div">
+                                                    <label>{ec.concern}</label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={concernChecks[`${ec.id}`]}
+                                                        value={ec.id}
+                                                        onChange={
+                                                            e => { handleCheckBoxChange(e.target.value) }}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </>
                                     )
                                 })}</fieldset>
+                        </Grid>
+                        <Grid>
+                            <button onClick={() => resetFilter()}>Reset Filters</button>
                         </Grid>
                     </Grid>
                     {/* container for returned funds */}
                     <Grid item className="ag-theme-alpine" sx={{ height: 500 }} xs={9}>
                         <AgGridReact
-                            // HELP: How to pass data from the cell to the function?
                             onCellClicked={cellClickedListener}
                             rowData={funds}
                             columnDefs={columnDefs}
