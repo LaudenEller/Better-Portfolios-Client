@@ -1,8 +1,8 @@
 import { Box, Button, Link, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { User } from "../users/User";
-import { updateUser } from "../users/UserManager";
+import { getUser, updateUser } from "../users/UserManager";
 import "./SideDrawer.css"
 
 export const SideDrawer = props => {
@@ -11,6 +11,14 @@ export const SideDrawer = props => {
     const [user, setUser] = useState()
     const [editForm, setEditForm] = useState(false)
     const [refreshUser, setRefreshUser] = useState(false)
+
+    useEffect(
+        () => {
+            getUser(1)
+                .then(d => setUser(d))
+        },
+        []
+    )
 
 const history = useHistory()
 
@@ -52,36 +60,35 @@ const history = useHistory()
     }
 
     return (
-            <nav className={drawerClasses}>
-                <Box>
-                {/* <div onClick={() => {
-                    history.push("/watch")
-                }} style={{ textDecoration: "none", margin: "0.5em" }}>
-                    <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
-                        Watch List
-                    </Typography></div>
-
-                <div onClick={() => {
-                    history.push("/favorites")
-                }} style={{ textDecoration: "none", margin: "0.5em" }}>
-                    <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
-                        Favorites
-                    </Typography></div> */}
-
-                <div onClick={() => {
-                    history.push("/profile")
-                }} style={{ textDecoration: "none", margin: "0.5em" }}>
-                    <Typography variant="body1" sx={{ fontSize: "1.4em" }}>
-                        Profile
-                    </Typography></div>
-                    <Box>
+            <nav style={{display: "flex"}} className={drawerClasses}>
+                <Box className="content_box" sx={{display: "flex", justifyContent: "space-between", flexDirection: "column", height: "100%"}}>
+                {
+                    localStorage.getItem("auth_token") !== null ?<>
+                                {/* <Button variant="contained"
+                                    sx={{
+                                        background: "grey",
+                                        ":hover": {
+                                            background: "grey"
+                                        },
+                                        margin: "0.5em"
+                                    }}
+                                    onClick={() => {
+                                        history.push("/profile")
+                                    }}>
+                                    Profile
+                                </Button> */}
+                                <h1 style={{alignSelf: "center", marginTop: "100px"}}
+              onClick={() => {
+                
+                history.push({ pathname: "/profile" })
+              }}>
+              Profile
+            </h1>
+                                <Box>
                     {/* // Render the user's profile */}
                     {/* Pass refresh state, user, setRefresh, to User */}
                     <User ChangeUserState={ChangeUserState} UpdateUser={UpdateUser} user={user} editForm={editForm} setEditForm={setEditForm} />
                 </Box>
-
-                {
-                    localStorage.getItem("auth_token") !== null ?
                         <Button variant="contained"
                             sx={{
                                 background: "grey",
@@ -96,6 +103,7 @@ const history = useHistory()
                             }}>
                             Logout
                         </Button>
+                        </>
                         :
                         <>
                             <Link to="/login" style={{ textDecoration: "none" }}>
@@ -105,7 +113,7 @@ const history = useHistory()
                                         ":hover": {
                                             background: "grey"
                                         },
-                                        margin: "0.1em",
+                                        margin: "0.2em",
                                         height: "1px"
                                     }}>
                                     Login/Register

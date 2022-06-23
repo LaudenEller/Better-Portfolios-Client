@@ -8,7 +8,7 @@ export const RecList = ({recs, HandleWatch, HandleReject}) => {
 
     return (
         <>
-            <Box className="rec_section">
+            <Box className="rec_section" style={{display: "flex", flexDirection: "column", }}>
             {/* <DialogTitle className="recs--by--you--title">Funds Recommended by You</DialogTitle>
             <Box className="recs--by--you">
                 {recs?.map((r) => {
@@ -19,14 +19,15 @@ export const RecList = ({recs, HandleWatch, HandleReject}) => {
                         </div>)
                 })}
             </Box> */}
-            <h2 className="recs--to--you--title">Your Recommendations</h2>
+            <h2 style={{alignSelf: "center"}} className="recs--to--you--title">Your Recommendations</h2>
             <Box className="recs--to--you">
                 {recs?.map((r) => {
                     return (<>
                     <Box className="fund_box"  sx={{
                             border: "1px solid black",
                             margin: "1em",
-                            padding: "1em"
+                            padding: "1em",
+                            width: "300px"
                         }}>
                         <Typography sx={{fontWeight: "bold"}}>From:</Typography><Typography> {r.recommender.username}</Typography>
                         <Typography sx={{fontWeight: "bold"}}>Fund:</Typography><Typography> {r.fund?.name}</Typography>

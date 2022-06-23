@@ -9,6 +9,7 @@ export const DrawerToggleButton = (props) => {
     }
 
 return ( <button id="toggle-button-id" className={buttonClasses} onClick={props.click}>
-        <img className="bp-logo" style={{height: "50px", width: "50px"}} src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU0ZCiZvoNgLcVvfmHHK7ImQ3SpVGeB4TILg&usqp=CAU"}/>
+        <img className="bp-logo" style={{height: "75px", width: "75px", marginTop: "5em", marginLeft: "2em"}} src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU0ZCiZvoNgLcVvfmHHK7ImQ3SpVGeB4TILg&usqp=CAU"}/>
     </button>
+    
 )}

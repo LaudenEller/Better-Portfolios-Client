@@ -20,15 +20,25 @@ export const User = ({ user, ChangeUserState, updatedUser, setUpdatedUser, Updat
             :
             <>
                 {/* When user clicks edit, render the user update form and pass it the user object*/}
-                <Box>
+                <Box sx={{border: "solid 1px black", padding: "15px", margin: "15px", }}>
+                    <Typography>User: {user?.first_name} {user?.last_name}</Typography>
                     <Typography>Username: {user?.username}</Typography>
-                    <Typography>Email: {user?.email}</Typography>
-                </Box>
-        <Button onClick={
+                    <Typography onClick={
             () => {
                 setEditForm(!editForm)
-            }
-        }>Update Email</Button>
+            }}>Email: {user?.email}</Typography>
+                </Box>
+                <Button variant="contained"
+                            sx={{
+                                background: "grey",
+                                ":hover": {
+                                    background: "grey"
+                                },
+                                margin: "1rem",
+                                width: "92%"
+                            }}>
+                            Update Account
+                        </Button>
         </>
     }
     </>

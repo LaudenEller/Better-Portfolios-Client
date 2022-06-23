@@ -79,9 +79,9 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
                     </Box>
                     <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
                         {faveButton ?
-                            <Button onClick={() => handleFavorite(content)}>Favorite</Button>
+                            <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
                             :
-                            <Button onClick={() => handleUnFavorite(content)}>Unfavorite</Button>
+                            <Button onClick={() => handleUnFavorite(content.id)}>Unfavorite</Button>
                         }
                     </Box>
                     </Box>

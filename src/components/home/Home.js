@@ -219,6 +219,8 @@ export const Home = () => {
 
     const defaultColDef = useMemo(() => ({
         sortable: true,
+        filter: true,
+        animateRows: true,
         resizable: true
     }), [])
 
@@ -245,44 +247,47 @@ export const Home = () => {
         {
             openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} handleUnFavorite={handleUnFavorite} faveButton={faveButton} /> : ""
         }
-        <Box className="page_content_box">
-            <Box className="page_title_box">
+        <Box className="page_content_box" sx={{height: "541px", border: "solid 1px #babfc7"}}>
+            {/* <Box className="page_title_box">
                 <h1>Better Portfolios</h1>
             </Box>
             <Box className="page_separator_box">
                 <hr className="page_separator" />
-            </Box>
+            </Box> */}
             <Box className="grid_box" sx={{ flexGrow: 1 }}>
                 <Grid container spacing={1}>
                     {/* container for filters */}
-                    <Grid item container xs={3} className="filter_box" direction="column">
+                    <Grid item container xs={2} className="filter_box" sx={{
+                        direction:"column",
+                        height: "550px",
+                        alignContent: "space-evenly",
+                        border: "1px, solid, black"
+                        }}>
                         {/* filter by name jsx */}
-                        <Grid item className="filter--search">
+                        <Grid item className="filter--search" sx={{width: "240px"}}>
                             <fieldset id="nameSearchField">
                                 <div className="nameSearch">
                                     <input
                                         type="text"
                                         className="form-control"
                                         placeholder="name..."
+                                        onChange={e => {
+                                            e.preventDefault()
+                                            let copy = { ...filter }
+                                            copy.name.push(e.currentTarget.previousElementSibling.value)
+                                            console.log(copy)
+                                            setFilter(copy)
+                                            // let filterToSet = {
+                                            //     type: "name",
+                                            //     value: e.currentTarget.previousElementSibling.value
+                                            // }
+                                            // setFilter(filterToSet)
+                                        }}
                                     />
-                                    <button className='button' onClick={e => {
-                                        e.preventDefault()
-                                        let copy = { ...filter }
-                                        copy.name.push(e.currentTarget.previousElementSibling.value)
-                                        console.log(copy)
-                                        setFilter(copy)
-                                        // let filterToSet = {
-                                        //     type: "name",
-                                        //     value: e.currentTarget.previousElementSibling.value
-                                        // }
-                                        // setFilter(filterToSet)
-                                    }}>
-                                        <label htmlFor="searchButton">Search</label>
-                                    </button>
                                 </div>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--issuer">
+                        <Grid item className="filter--issuer" sx={{width: "240px"}}>
                             {/* filter by issuer jsx */}
                             <fieldset>
                                 <select
@@ -315,7 +320,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--asset_class">
+                        <Grid item className="filter--asset_class" sx={{width: "240px"}}>
                             {/* filter by asset class jsx */}
                             <fieldset>
                                 <select
@@ -342,7 +347,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--industry">
+                        <Grid item className="filter--industry" sx={{width: "240px"}}>
                             <fieldset className="form-group">
                                 <select
                                     className="industry_dropdown"
@@ -367,7 +372,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--country">
+                        <Grid item className="filter--country" sx={{width: "240px"}}>
                             <fieldset className="form-group">
                                 <select
                                     className="country_dropdown"
@@ -392,7 +397,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--esg">
+                        <Grid item className="filter--esg" sx={{width: "240px"}}>
                             <fieldset className="form-group">
                                 <Typography sx={{ fontWeight: "bold" }}>Filter by ESG Sector</Typography>
                                 {esgConcerns?.map((ec) => {
@@ -414,12 +419,12 @@ export const Home = () => {
                                     )
                                 })}</fieldset>
                         </Grid>
-                        <Grid>
+                        <Grid sx={{width: "240px"}}>
                             <button onClick={() => resetFilter()}>Reset Filters</button>
                         </Grid>
                     </Grid>
                     {/* container for returned funds */}
-                    <Grid item className="ag-theme-alpine" sx={{ height: 500 }} xs={9}>
+                    <Grid item className="ag-theme-alpine" sx={{ height: 550, }} xs={10}>
                         <AgGridReact
                             onCellClicked={cellClickedListener}
                             rowData={funds}
