@@ -21,7 +21,6 @@ export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, 
 
     return (<>
         <div>
-            {/* <Button onClick={handleOpen}>Open modal</Button> */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -44,14 +43,11 @@ export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, 
                             </Box>
                         </Box>
                         <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
-                            {/* <ChildModal2 content={content} /> */}
-                            {/* <Button onClick={() => handleWatch(content.id)}>Watch Fund</Button> */}
                             {watchButton ?
                             <Button onClick={() => handleWatch(content.id)}>Watch</Button>
                             :
                             <Button onClick={() => handleUnWatch(content.id)}>Unwatch</Button>
                         }
-                            {/* passes fund id to the handleOpen function */}
                             <Button onClick={() => handleOpenRec(content.id)}>Recommend Fund</Button>
                             <Button onClick={() => handleOpenIssuer(content.issuer.id)}>See Issuer</Button>
                         </Box>
@@ -60,6 +56,3 @@ export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, 
         </div>
     </>);
 }
-
-
-// export a function that accepts modal and setModal, then opens a popup

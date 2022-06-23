@@ -1,5 +1,3 @@
-// Export a function that fetches all funds
-// Export a function that fetches a fund
 import { fetchIt } from "../../utils/Fetch"
 import { Settings } from "../../utils/Settings"
 
