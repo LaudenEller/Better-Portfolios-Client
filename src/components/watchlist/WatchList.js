@@ -20,7 +20,6 @@ export const WatchList = () => {
     const [issuer, setIssuer] = useState({})
 
 
-    // Fetch the current user's watch list
     useEffect(() => {
         getWatchList()
             .then((d) => setFunds(d))
@@ -54,7 +53,6 @@ export const WatchList = () => {
 
     const handleRecFund = (rec) => {
         setOpenRec(!openRec)
-        // HELP: How come this returns from the API as "not found"?
         createRecommendation(rec)
     }
 
@@ -62,7 +60,6 @@ export const WatchList = () => {
         setOpen(!open);
     };
 
-    // Render that list to the DOM
     return (
         <>
             {
@@ -93,20 +90,3 @@ export const WatchList = () => {
         </>
     )
 }
-
-// When a fund is clicked on
-    // a popup should appear with the fund details and a rec button
-        // When the rec button is clicked
-            // a popup should appear with the rec form
-                // When the rec form is submitted
-                    // the rec popup should disappear
-// When a fund issuer's name is clicked on
-    // a popup should appear with that issuer's details and funds
-        // When one of their funds are clicked on
-            // a popup should appear with the fund details and a rec button
-                // When the rec button is clicked
-                    // a popup should appear with the rec form
-                        // When the rec form is submitted
-                            // the rec popup should disappear
-// When a "remove" button is clicked
-    // That fund should be removed from the favorites list

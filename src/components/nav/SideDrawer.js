@@ -6,8 +6,6 @@ import { getUser, updateUser } from "../users/UserManager";
 import "./SideDrawer.css"
 
 export const SideDrawer = props => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [deleteIsOpen, setDeleteIsOpen] = useState(false)
     const [user, setUser] = useState()
     const [editForm, setEditForm] = useState(false)
     const [refreshUser, setRefreshUser] = useState(false)
@@ -20,15 +18,7 @@ export const SideDrawer = props => {
         []
     )
 
-const history = useHistory()
-
-    const TogglePopup = () => {
-        setIsOpen(!isOpen)
-    }
-
-    const ToggleDeletePopup = () => {
-        setDeleteIsOpen(!deleteIsOpen)
-    }
+    const history = useHistory()
 
     let drawerClasses = 'sidedrawer'
     if (props.show) {
@@ -60,35 +50,22 @@ const history = useHistory()
     }
 
     return (
-            <nav style={{display: "flex"}} className={drawerClasses}>
-                <Box className="content_box" sx={{display: "flex", justifyContent: "space-between", flexDirection: "column", height: "100%"}}>
+        <nav style={{ display: "flex" }} className={drawerClasses}>
+            <Box className="content_box" sx={{ display: "flex", justifyContent: "space-between", flexDirection: "column", height: "100%" }}>
                 {
-                    localStorage.getItem("auth_token") !== null ?<>
-                                {/* <Button variant="contained"
-                                    sx={{
-                                        background: "grey",
-                                        ":hover": {
-                                            background: "grey"
-                                        },
-                                        margin: "0.5em"
-                                    }}
-                                    onClick={() => {
-                                        history.push("/profile")
-                                    }}>
-                                    Profile
-                                </Button> */}
-                                <h1 style={{alignSelf: "center", marginTop: "100px"}}
-              onClick={() => {
-                
-                history.push({ pathname: "/profile" })
-              }}>
-              Profile
-            </h1>
-                                <Box>
-                    {/* // Render the user's profile */}
-                    {/* Pass refresh state, user, setRefresh, to User */}
-                    <User ChangeUserState={ChangeUserState} UpdateUser={UpdateUser} user={user} editForm={editForm} setEditForm={setEditForm} />
-                </Box>
+                    localStorage.getItem("auth_token") !== null ? <>
+                        <h1 style={{ alignSelf: "center", marginTop: "100px" }}
+                            onClick={() => {
+
+                                history.push({ pathname: "/profile" })
+                            }}>
+                            Profile
+                        </h1>
+                        <Box>
+                            {/* // Render the user's profile */}
+                            {/* Pass refresh state, user, setRefresh, to User */}
+                            <User ChangeUserState={ChangeUserState} UpdateUser={UpdateUser} user={user} editForm={editForm} setEditForm={setEditForm} />
+                        </Box>
                         <Button variant="contained"
                             sx={{
                                 background: "grey",
@@ -103,7 +80,7 @@ const history = useHistory()
                             }}>
                             Logout
                         </Button>
-                        </>
+                    </>
                         :
                         <>
                             <Link to="/login" style={{ textDecoration: "none" }}>
@@ -122,6 +99,6 @@ const history = useHistory()
                         </>
                 }
             </Box >
-            </nav >
+        </nav >
     )
 }

@@ -21,6 +21,7 @@ export const Profile = () => {
     const [openIssuer, setOpenIssuer] = useState(false);
     const [content, setContent] = useState({})
     const [users, setUsers] = useState([])
+    const [user, setUser] = useState([])
     const [favorites, setFavorites] = useState()
     const [refreshFaves, setRefreshFaves] = useState()
     const [faveButton, setFaveButton] = useState(true)
@@ -184,7 +185,7 @@ export const Profile = () => {
                                         sx={{
                                             display: "flex",
                                             flexDirection: "row",
-                                            justifyContent: "flex-start"
+                                            justifyContent: "center"
                                         }}>
                                         <Button variant="contained" sx={{ margin: "1em" }} onClick={() => handleUnWatch(f.id)}>Remove Fund</Button>
                                     </Box>
@@ -199,15 +200,25 @@ export const Profile = () => {
                                         border: "1px solid black",
                                         margin: "1em",
                                         padding: "1em",
-                                        width: "300px"
+                                        width: "300px",
+                                        display: 'flex',
+                                        flexDirection: "column",
+                                        justifyContent: "space-evenly"
                                     }}>
+                                    <Box sx={{display: "flex", justifyContent: "space-evenly"}} >
                                     <Typography>{f.name}</Typography>
-                                    <Typography>{f.country.country}</Typography>
+                                    <img style={{ width: "50px", height: "50px" }} src={f.image_url} alt="boohoo" className="img-responsive" />
+                                    </Box>
+                                    <Box>
+                                <ul className="issuer_funds_box" sx={{display: "flex", justifyContent: "space-evenly", padding: "5px"}}>{f?.funds?.map((fund) => {
+                                    return <li>{fund.name}</li>
+                                })}</ul>
+                            </Box>
                                     <Box key={`fav--${f.id}`}
                                         sx={{
                                             display: "flex",
                                             flexDirection: "row",
-                                            justifyContent: "flex-start"
+                                            justifyContent: "space-evenly"
                                         }}>
                                         <Button variant="contained" sx={{ margin: "1em" }} onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
                                     </Box>

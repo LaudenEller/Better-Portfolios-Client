@@ -248,12 +248,6 @@ export const Home = () => {
             openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} handleUnFavorite={handleUnFavorite} faveButton={faveButton} /> : ""
         }
         <Box className="page_content_box" sx={{height: "541px", border: "solid 1px #babfc7"}}>
-            {/* <Box className="page_title_box">
-                <h1>Better Portfolios</h1>
-            </Box>
-            <Box className="page_separator_box">
-                <hr className="page_separator" />
-            </Box> */}
             <Box className="grid_box" sx={{ flexGrow: 1 }}>
                 <Grid container spacing={1}>
                     {/* container for filters */}
@@ -277,11 +271,6 @@ export const Home = () => {
                                             copy.name.push(e.currentTarget.previousElementSibling.value)
                                             console.log(copy)
                                             setFilter(copy)
-                                            // let filterToSet = {
-                                            //     type: "name",
-                                            //     value: e.currentTarget.previousElementSibling.value
-                                            // }
-                                            // setFilter(filterToSet)
                                         }}
                                     />
                                 </div>
@@ -293,18 +282,12 @@ export const Home = () => {
                                 <select
                                     className="issuerDropdown"
                                     name="issuerId"
-                                    // value={filter.issuer}
                                     onChange={e => {
                                         e.preventDefault()
                                         let copy = { ...filter }
                                         copy.issuer.push(e.target.value)
                                         console.log(copy)
                                         setFilter(copy)
-                                        // let copy = JSON.parse(JSON.stringify(filter))
-                                        // copy.type = "issuer"
-                                        // copy.value = e.target.value
-                                        // setFilter(copy)
-
                                     }}
                                 >
                                     <option name="issuerId" hidden value="0">
@@ -419,7 +402,7 @@ export const Home = () => {
                                     )
                                 })}</fieldset>
                         </Grid>
-                        <Grid sx={{width: "240px"}}>
+                        <Grid item className="filter--button" sx={{width: "240px"}}>
                             <button onClick={() => resetFilter()}>Reset Filters</button>
                         </Grid>
                     </Grid>
