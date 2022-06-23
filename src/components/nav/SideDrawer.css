@@ -1,0 +1,65 @@
+.sidedrawer {
+    height: 100%;
+    background-color: rgba(255,255,255,0.7);
+    opacity: 90%;
+    border-right: solid #f7b558;
+    border-width: 3px;
+    box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70%;
+    max-width: 400px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+}
+
+.sidedrawer.open {
+    transform: translateX(0);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidedrawer ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.sidedrawer li {
+    margin: 0.5rem 0;
+    color: black;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sidedrawer li a:hover,
+.sidedrawer li:active {
+    color: #fa923f;
+    cursor: pointer;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.sidedrawer-navigation-items {
+    margin-top: 50px;
+    margin-left: 1rem;
+    height: 50%;
+}
+.sidedrawer-navigation-items a {
+    text-decoration: none;
+    color: black;
+}
+
+.logout-container {
+    text-decoration: none;
+}
+
+.sidedrawer-navigation-items h3:hover {
+    color: #fa923f;
+}

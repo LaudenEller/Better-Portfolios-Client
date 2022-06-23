@@ -6,13 +6,18 @@ import { Box } from "@mui/system"
 // import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import React from "react"
 import { useHistory } from "react-router-dom"
+import { DrawerToggleButton } from "./DrawerToggler"
 import "./NavBar.css"
 // import "./investment.png"
 
-export const NavBar = () => {
+export const NavBar = props => {
   const history = useHistory()
   return (
     <nav>
+       <div>
+                    {/* forwards prop reference from Groce'Inflation.js to DrawerToggler.js */}
+                    <DrawerToggleButton click={props.drawerClickHandler} />
+                </div>
       <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
         <img className="bp-logo" style={{height: "50px", width: "50px"}} src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU0ZCiZvoNgLcVvfmHHK7ImQ3SpVGeB4TILg&usqp=CAU"}
           onClick={() => {
