@@ -9,7 +9,7 @@ export const RecList = ({recs, HandleWatch, HandleReject}) => {
     return (
         <>
             <Box className="rec_section">
-            <DialogTitle className="recs--by--you--title">Funds Recommended by You</DialogTitle>
+            {/* <DialogTitle className="recs--by--you--title">Funds Recommended by You</DialogTitle>
             <Box className="recs--by--you">
                 {recs?.map((r) => {
                     return (<div key={`rec--${r.id}`}>
@@ -18,15 +18,28 @@ export const RecList = ({recs, HandleWatch, HandleReject}) => {
                         <Typography>Note: {r.note}</Typography>
                         </div>)
                 })}
-            </Box>
-            <DialogTitle className="recs--to--you--title">Funds Recommended to You</DialogTitle>
+            </Box> */}
+            <h2 className="recs--to--you--title">Your Recommendations</h2>
             <Box className="recs--to--you">
                 {recs?.map((r) => {
                     return (<>
-                        <Typography>{r.fund?.name}</Typography>
-                        <Typography>{r.note}</Typography>
-                        <Button variant="contained" onClick={() => HandleReject(r.id)}>Reject Rec.</Button>
+                    <Box className="fund_box"  sx={{
+                            border: "1px solid black",
+                            margin: "1em",
+                            padding: "1em"
+                        }}>
+                        <Typography sx={{fontWeight: "bold"}}>From:</Typography><Typography> {r.recommender.username}</Typography>
+                        <Typography sx={{fontWeight: "bold"}}>Fund:</Typography><Typography> {r.fund?.name}</Typography>
+                        <Typography sx={{fontWeight: "bold"}}>Note:</Typography><Typography> {r.note}</Typography>
+                        <Box className="button_box" sx={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                            margin: "1em"
+                        }}>
+                        <Button variant="contained" onClick={() => HandleReject(r.id)}>Reject Rec</Button>
                         <Button variant="contained" onClick={() => HandleWatch(r)}>Watch Fund</Button>
+                        </Box>
+                        </Box>
                         </>)
                 })}
             </Box>

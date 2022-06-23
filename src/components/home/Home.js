@@ -1,7 +1,7 @@
 import { Box, Grid, Paper, styled, Typography } from "@mui/material"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { getAssetClases, getCountries, getEsgConcerns, getIndustries, searchName } from "../filters/FiltersManager"
-import { filterFunds, getFundList, watchFund } from "../funds/FundManager"
+import { filterFunds, getFundList, unWatchFund, watchFund } from "../funds/FundManager"
 import { Fave, getIssuer, getIssuerList, unFave } from "../issuers/IssuerManager"
 import { getUsers } from "../users/UserManager"
 import { FundModal } from "../modal/FundModal"
@@ -28,6 +28,7 @@ export const Home = () => {
     const [recId, setRecId] = useState(0)
     const [content, setContent] = useState({})
     const [faveButton, setFaveButton] = useState(true)
+    const [watchButton, setWatchButton] = useState(true)
     const [columnDefs, setColumnDefs] = useState([
         { field: "name" },
         { field: "issuer.name" },
@@ -163,6 +164,12 @@ export const Home = () => {
 
     const handleWatch = (fundId) => {
         watchFund(fundId)
+        setWatchButton(!watchButton)
+        setOpen(false)
+    }
+    const handleUnWatch = (fundId) => {
+        unWatchFund(fundId)
+        setWatchButton(!watchButton)
         setOpen(false)
     }
 
@@ -230,7 +237,7 @@ export const Home = () => {
 
     return (<>
         {
-            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} handleWatch={handleWatch} /> : ""
+            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} handleWatch={handleWatch} handleUnWatch={handleUnWatch} watchButton={watchButton}/> : ""
         }
         {
             openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
