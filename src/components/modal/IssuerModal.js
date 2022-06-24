@@ -11,7 +11,7 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
         transform: 'translate(-50%, -50%)',
         width: 400,
         bgcolor: 'background.paper',
-        border: '2px solid #000',
+        border: '2px solid #7db343',
         boxShadow: 24,
         pt: 2,
         px: 4,

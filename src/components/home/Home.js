@@ -251,14 +251,17 @@ export const Home = () => {
             <Box className="grid_box" sx={{ flexGrow: 1 }}>
                 <Grid container spacing={1}>
                     {/* container for filters */}
-                    <Grid item container xs={2} className="filter_box" sx={{
+                    <Grid item container xs={1.9} className="filter_box" sx={{
                         direction:"column",
-                        height: "550px",
+                        height: "539px",
                         alignContent: "space-evenly",
-                        border: "1px, solid, black"
+                        border: "1px, solid, black",
+                        backgroundColor: "#fff",
+                        marginLeft: "9px",
+                        marginTop: "9px"
                         }}>
                         {/* filter by name jsx */}
-                        <Grid item className="filter--search" sx={{width: "240px"}}>
+                        <Grid item className="filter--search" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             <fieldset id="nameSearchField">
                                 <div className="nameSearch">
                                     <input
@@ -276,7 +279,7 @@ export const Home = () => {
                                 </div>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--issuer" sx={{width: "240px"}}>
+                        <Grid item className="filter--issuer" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             {/* filter by issuer jsx */}
                             <fieldset>
                                 <select
@@ -303,7 +306,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--asset_class" sx={{width: "240px"}}>
+                        <Grid item className="filter--asset_class" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             {/* filter by asset class jsx */}
                             <fieldset>
                                 <select
@@ -330,7 +333,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--industry" sx={{width: "240px"}}>
+                        <Grid item className="filter--industry" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             <fieldset className="form-group">
                                 <select
                                     className="industry_dropdown"
@@ -355,7 +358,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--country" sx={{width: "240px"}}>
+                        <Grid item className="filter--country" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             <fieldset className="form-group">
                                 <select
                                     className="country_dropdown"
@@ -380,7 +383,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--esg" sx={{width: "240px"}}>
+                        <Grid item className="filter--esg" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             <fieldset className="form-group">
                                 <Typography sx={{ fontWeight: "bold" }}>Filter by ESG Sector</Typography>
                                 {esgConcerns?.map((ec) => {
@@ -407,7 +410,7 @@ export const Home = () => {
                         </Grid>
                     </Grid>
                     {/* container for returned funds */}
-                    <Grid item className="ag-theme-alpine" sx={{ height: 550, }} xs={10}>
+                    <Grid item className="ag-theme-alpine" sx={{ height: 550, paddingLeft: 0, marginLeft: 0,}} xs={10}>
                         <AgGridReact
                             onCellClicked={cellClickedListener}
                             rowData={funds}

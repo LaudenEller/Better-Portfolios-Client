@@ -153,35 +153,68 @@ export const Profile = () => {
                 openIssuer != 0 ? <IssuerModal faveButton={faveButton} openIssuer={openIssuer} content={content} handleUnFavorite={handleUnFavorite} handleFavorite={handleFavorite} /> : ""
             }
             <Box className="all_content_box" >
-                <Box className="sub_content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
-                    <Box>
+                <Box className="sub_content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", border: "solid 1px black", height: "600px", overflow: "hidden", backgroundColor: "#f3f6f3" }}>
+                    <Box sx={{ overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }}>
                         {/* // Render the RecList */}
                         {/* Pass refresh state, setRefresh,  to RecList */}
                         <RecList recs={recs} refreshRecs={refreshRecs} setRefreshRecs={setRefreshRecs} HandleWatch={HandleWatch} HandleReject={HandleReject} />
                     </Box>
-                    <Box style={{ display: "flex", flexDirection: "column", }} className="funds_Box">
-                        <h2 style={{ alignSelf: "center" }}>Watched Funds</h2>
+                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }} className="funds_Box">
+                        <h3 style={{ alignSelf: "center" }}>Watched Funds</h3>
                         {funds?.map((f) => {
                             return (
                                 <Box className="fund_box" sx={{
                                     border: "1px solid black",
                                     margin: "1em",
                                     padding: "1em",
-                                    width: "300px"
+                                    width: "300px",
+                                    backgroundColor: "#f8f8f8",
+                                    display: "flex",
+                                    flexDirection: "column"
                                 }}>
-                                    <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Fund:</Typography>
-                                    <Typography>{f.name}</Typography>
-                                    <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Issuer:</Typography>
-                                    <Typography onClick={() => handleOpenIssuer2(f.issuer.id)}>{f.issuer.name}</Typography>
-                                    <Typography sx={{ fontWeight: "bold" }}>ESG Rating:</Typography>
-                                    <Typography>{f.esg_rating}</Typography>
-                                    <Typography sx={{ fontWeight: "bold" }}>ESG Concerns:</Typography>
-                                    <Typography>{f.esg_concern.map((ec) => {
-                                        return (
-                                            <Typography>{ec.concern}</Typography>
-                                        )
-                                    })}</Typography>
-                                    <Box key={`fav--${f.id}`}
+                                    {/* <Box className="name_box" sg={{justifySelf: "flex-start"}}>Fund:</Box>
+                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>Issuer:</Box>
+                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>ESG Rating:</Box>
+                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>ESG Concerns:</Box> */}
+                                    <Box className="content_box" sx={{  display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+                                        {/* first column box */}
+                                        <Box className="column_box" sx={{ display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Fund:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Issuer:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ fontWeight: "bold" }}>ESG Rating:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ fontWeight: "bold" }}>ESG Concerns:</Typography>
+                                            </Box>
+
+                                        </Box>
+
+                                        {/* second column box */}
+                                        <Box className="column_box" sx={{ display: "flex", flexDirection: "column" }}>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}>{f.name}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleOpenIssuer2(f.issuer.id)}>{f.issuer.name}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography>{f.esg_rating}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}>{f.esg_concern.map((ec) => {
+                                                    return (
+                                                        <Typography>{ec.concern}</Typography>
+                                                    )
+                                                })}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                    <Box className="button_box" key={`fav--${f.id}`}
                                         sx={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -189,10 +222,12 @@ export const Profile = () => {
                                         }}>
                                         <Button variant="contained" sx={{ margin: "1em" }} onClick={() => handleUnWatch(f.id)}>Remove Fund</Button>
                                     </Box>
-                                </Box>)
-                        })}</Box>
-                    <Box style={{ display: "flex", flexDirection: "column", }} className="favorites_container">
-                        <h2 style={{ alignSelf: "center" }}>Favorites Cos</h2>
+                                </Box>
+                            )
+                        })}
+                    </Box>
+                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }} className="favorites_container">
+                        <h3 style={{ alignSelf: "center" }}>Favorites Cos</h3>
                         {favorites?.map((f) => {
                             return (<>
                                 <Box
@@ -203,17 +238,18 @@ export const Profile = () => {
                                         width: "300px",
                                         display: 'flex',
                                         flexDirection: "column",
-                                        justifyContent: "space-evenly"
+                                        justifyContent: "space-evenly",
+                                        backgroundColor: "#f8f8f8"
                                     }}>
-                                    <Box sx={{display: "flex", justifyContent: "space-evenly"}} >
-                                    <Typography>{f.name}</Typography>
-                                    <img style={{ width: "50px", height: "50px" }} src={f.image_url} alt="boohoo" className="img-responsive" />
+                                    <Box sx={{ display: "flex", justifyContent: "space-evenly" }} >
+                                        <Typography>{f.name}</Typography>
+                                        <img style={{ width: "50px", height: "50px" }} src={f.image_url} alt="boohoo" className="img-responsive" />
                                     </Box>
                                     <Box>
-                                <ul className="issuer_funds_box" sx={{display: "flex", justifyContent: "space-evenly", padding: "5px"}}>{f?.funds?.map((fund) => {
-                                    return <li>{fund.name}</li>
-                                })}</ul>
-                            </Box>
+                                        <ul className="issuer_funds_box" sx={{ display: "flex", justifyContent: "space-evenly", padding: "5px" }}>{f?.funds?.map((fund) => {
+                                            return <li>{fund.name}</li>
+                                        })}</ul>
+                                    </Box>
                                     <Box key={`fav--${f.id}`}
                                         sx={{
                                             display: "flex",
