@@ -39,10 +39,15 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
                                 <p id="parent-modal-description">Domicile: {content?.country?.country}</p>
                             </Box>
                             <Box>
+                                        <ul className="issuer_funds_box" sx={{ display: "flex", justifyContent: "space-evenly", padding: "5px" }}>{content?.funds?.map((fund) => {
+                                            return <li>{fund.name}</li>
+                                        })}</ul>
+                                    </Box>
+                            {/* <Box>
                                 {content?.funds?.map((fund) => {
                                     return <img style={{ width: "25px", height: "25px" }} src={fund.image_url} alt="boohoo" className="img-responsive" />
                                 })}
-                            </Box>
+                            </Box> */}
                         </Box>
                     </Box>
                     <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>

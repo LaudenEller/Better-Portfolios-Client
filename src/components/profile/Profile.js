@@ -25,6 +25,8 @@ export const Profile = () => {
     const [favorites, setFavorites] = useState()
     const [refreshFaves, setRefreshFaves] = useState()
     const [faveButton, setFaveButton] = useState(true)
+    const [load, finishLoad] = useState(false)
+
 
     useEffect(() => {
         getFavorites()
@@ -142,8 +144,9 @@ export const Profile = () => {
     }
 
     return (
+
         <>
-            {
+        {
                 open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} /> : ""
             }
             {
@@ -151,15 +154,15 @@ export const Profile = () => {
             }
             {
                 openIssuer != 0 ? <IssuerModal faveButton={faveButton} openIssuer={openIssuer} content={content} handleUnFavorite={handleUnFavorite} handleFavorite={handleFavorite} /> : ""
-            }
+            } 
             <Box className="all_content_box" >
                 <Box className="sub_content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", border: "solid 1px black", height: "600px", overflow: "hidden", backgroundColor: "#f3f6f3" }}>
-                    <Box sx={{ overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }}>
-                        {/* // Render the RecList */}
-                        {/* Pass refresh state, setRefresh,  to RecList */}
+                    <Box sx={{ overflow: "scroll", backgroundColor: "#f8ffff", border: "solid 1px black", marginTop: "25px", marginBottom: "25px" }}>
+                        {/* Rec List Column */}
                         <RecList recs={recs} refreshRecs={refreshRecs} setRefreshRecs={setRefreshRecs} HandleWatch={HandleWatch} HandleReject={HandleReject} />
                     </Box>
-                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }} className="funds_Box">
+                    {/* Watch List Column */}
+                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#f8ffff", border: "solid 1px black", marginTop: "25px", marginBottom: "25px" }} className="funds_Box">
                         <h3 style={{ alignSelf: "center" }}>Watched Funds</h3>
                         {funds?.map((f) => {
                             return (
@@ -168,14 +171,10 @@ export const Profile = () => {
                                     margin: "1em",
                                     padding: "1em",
                                     width: "300px",
-                                    backgroundColor: "#f8f8f8",
+                                    backgroundColor: "#ffffff",
                                     display: "flex",
                                     flexDirection: "column"
                                 }}>
-                                    {/* <Box className="name_box" sg={{justifySelf: "flex-start"}}>Fund:</Box>
-                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>Issuer:</Box>
-                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>ESG Rating:</Box>
-                                            <Box className="name_box" sg={{justifySelf: "flex-start"}}>ESG Concerns:</Box> */}
                                     <Box className="content_box" sx={{  display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
                                         {/* first column box */}
                                         <Box className="column_box" sx={{ display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
@@ -191,9 +190,7 @@ export const Profile = () => {
                                             <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography sx={{ fontWeight: "bold" }}>ESG Concerns:</Typography>
                                             </Box>
-
                                         </Box>
-
                                         {/* second column box */}
                                         <Box className="column_box" sx={{ display: "flex", flexDirection: "column" }}>
                                             <Box sx={{ justifySelf: "flex-start" }}>
@@ -214,6 +211,7 @@ export const Profile = () => {
                                             </Box>
                                         </Box>
                                     </Box>
+                                    {/* Unwatch Button Box */}
                                     <Box className="button_box" key={`fav--${f.id}`}
                                         sx={{
                                             display: "flex",
@@ -226,7 +224,8 @@ export const Profile = () => {
                             )
                         })}
                     </Box>
-                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#EEFCF8", border: "solid 1px black", marginTop: "25px" }} className="favorites_container">
+                    {/* Favorites List Column */}
+                    <Box style={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#f8ffff", border: "solid 1px black", marginTop: "25px", marginBottom: "25px" }} className="favorites_container">
                         <h3 style={{ alignSelf: "center" }}>Favorites Cos</h3>
                         {favorites?.map((f) => {
                             return (<>
@@ -239,10 +238,10 @@ export const Profile = () => {
                                         display: 'flex',
                                         flexDirection: "column",
                                         justifyContent: "space-evenly",
-                                        backgroundColor: "#f8f8f8"
+                                        backgroundColor: "#ffffff"
                                     }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-evenly" }} >
-                                        <Typography>{f.name}</Typography>
+                                        <Typography sx={{fontWeight: "bold", fontSize: "large"}}>{f.name}</Typography>
                                         <img style={{ width: "50px", height: "50px" }} src={f.image_url} alt="boohoo" className="img-responsive" />
                                     </Box>
                                     <Box>
@@ -265,6 +264,6 @@ export const Profile = () => {
                     </Box>
                 </Box>
             </Box>
-        </>
+                    </>
     )
 }

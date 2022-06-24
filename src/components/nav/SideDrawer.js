@@ -52,9 +52,7 @@ export const SideDrawer = ({show, setSideDrawerOpen, sideDrawerOpen}) => {
     return (
         <nav style={{ display: "flex" }} className={drawerClasses}>
             <Box className="content_box" sx={{ display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "100%" }}>
-                {
-                    localStorage.getItem("auth_token") !== null ? <>
-                        <h1 style={{ alignSelf: "center", marginTop: "35px", marginBottom: "150px" }}
+                        <h1 style={{ alignSelf: "center", marginTop: "35px", marginBottom: "400px" }}
                             onClick={() => {
                                 setSideDrawerOpen(!sideDrawerOpen)
                                 history.push({ pathname: "/profile" })
@@ -80,24 +78,6 @@ export const SideDrawer = ({show, setSideDrawerOpen, sideDrawerOpen}) => {
                             }}>
                             Logout
                         </Button>
-                    </>
-                        :
-                        <>
-                            <Link to="/login" style={{ textDecoration: "none", marginTop: "200px" }}>
-                                <Button variant="contained"
-                                    sx={{
-                                        background: "grey",
-                                        ":hover": {
-                                            background: "grey"
-                                        },
-                                        margin: "0.2em",
-                                        height: "1px"
-                                    }}>
-                                    Login/Register
-                                </Button>
-                            </Link>
-                        </>
-                }
             </Box >
         </nav >
     )

@@ -263,7 +263,7 @@ export const Home = () => {
                         {/* filter by name jsx */}
                         <Grid item className="filter--search" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
                             <fieldset id="nameSearchField">
-                                <div className="nameSearch">
+                                
                                     <input
                                         type="text"
                                         className="form-control"
@@ -272,11 +272,10 @@ export const Home = () => {
                                             e.preventDefault()
                                             let copy = { ...filter }
                                             copy.name.push(e.currentTarget.previousElementSibling.value)
-                                            console.log(copy)
                                             setFilter(copy)
                                         }}
                                     />
-                                </div>
+                                
                             </fieldset>
                         </Grid>
                         <Grid item className="filter--issuer" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
