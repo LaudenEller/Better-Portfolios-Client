@@ -1,8 +1,9 @@
-// This modal will accept openRec state, fundId, and return rec form
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import { createRecommendation } from '../recommendations/RecommendationManager';
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -17,8 +18,9 @@ const style = {
     pb: 3,
 };
 
-export const RecModal = ({ content, recId, handleOpen, handleRecFund, openRec, }) => {
-    // const [open, setOpen] = useState(false);
+export const RecModal = ({ content, recId, openRec, setOpenRec, }) => {
+    
+    // Holds rec to send to database
     const [rec, updateRec] = useState(
         {
             fundId: parseInt(`${recId}`),
@@ -27,26 +29,25 @@ export const RecModal = ({ content, recId, handleOpen, handleRecFund, openRec, }
         }
     )
 
-    // get users === content (which is an array)
-    // print form
-    // select box of users
-    // note
-    // button
-    // When button is clicked
-    // send new rec to db
-    // close modal
+    const HandleClose = () => {
+        setOpenRec(false);;
+    };
+
+    const HandleRecFund = (rec) => {
+        setOpenRec(false)
+        createRecommendation(rec)
+    }
 
     return (
         <>
-            {/* <Button onClick={handleOpen}>Recommend Fund</Button> */}
             <Modal
-                hideBackdrop
                 open={openRec}
-                aria-labelledby="child-modal-title"
-                aria-describedby="child-modal-description"
+                onClose={HandleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
             >
-                <Box sx={{ ...style, width: 200 }}>
-                    <h2 id="child-modal-title">Recommend</h2>
+                <Box className='modal-box' sx={{ ...style }}>
+                    <h2 id="modal-title">Recommend</h2>
                     <form>
                         <fieldset>
                             <div>
@@ -90,7 +91,7 @@ export const RecModal = ({ content, recId, handleOpen, handleRecFund, openRec, }
                             </div>
                         </fieldset>
                     </form>
-                    <Button onClick={() => handleRecFund(rec)}>Done</Button>
+                    <Button onClick={() => HandleRecFund(rec)}>Done</Button>
                 </Box>
             </Modal>
         </>

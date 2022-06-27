@@ -1,19 +1,22 @@
-import { Box, Grid, Paper, styled, Typography } from "@mui/material"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Box, Grid, Typography } from "@mui/material"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { getAssetClases, getCountries, getEsgConcerns, getIndustries, searchName } from "../filters/FiltersManager"
-import { filterFunds, getFundList, unWatchFund, watchFund } from "../funds/FundManager"
-import { Fave, getIssuer, getIssuerList, unFave } from "../issuers/IssuerManager"
+import { filterFunds, getFundList } from "../funds/FundManager"
+import { getIssuer, getIssuerList } from "../issuers/IssuerManager"
 import { getUsers } from "../users/UserManager"
 import { FundModal } from "../modal/FundModal"
 import { RecModal } from "../modal/RecModal"
 import { IssuerModal } from "../modal/IssuerModal"
-import { createRecommendation } from "../recommendations/RecommendationManager"
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 
 
 export const Home = () => {
+
+    // HELP: How can I get these to load onto the JSX without it being clunky? 
+    // (Try: ternary operator with "loading div" and db content)
+    // State for objects from db 
     const [funds, setFunds] = useState([])
     const [users, setUsers] = useState([])
     const [issuers, setIssuers] = useState([])
@@ -21,25 +24,22 @@ export const Home = () => {
     const [industries, setIndustries] = useState([])
     const [countries, setCountries] = useState([])
     const [esgConcerns, setEsgConcerns] = useState([])
-    const [concernChecks, setConcernChecks] = useState({})
+
+    // State for button and modal controls
     const [open, setOpen] = useState(false);
     const [openIssuer, setOpenIssuer] = useState(false);
     const [openRec, setOpenRec] = useState(false);
-    const [recId, setRecId] = useState(0)
-    const [content, setContent] = useState({})
     const [faveButton, setFaveButton] = useState(true)
     const [watchButton, setWatchButton] = useState(true)
-    const [columnDefs, setColumnDefs] = useState([
-        { field: "name" },
-        { field: "issuer.name" },
-        { field: "country.country" },
-        { field: "asset_rating" },
-        { field: "esg_rating" },
-        { field: "asset_class.asset_class" },
-        { field: "industry.industry" },
-        { field: "esg_concern.concern" },
-        // Add a grouped field for the esg concerns 
-    ])
+
+    // State for handling local storage
+    // Passes objects to modals
+    const [content, setContent] = useState({})
+    // Saves checkbox selection
+    const [concernChecks, setConcernChecks] = useState({})
+    // Passes a fund Id to the rec modal
+    const [recId, setRecId] = useState(0)
+    // Saves filter input for the query params string
     const [filter, setFilter] = useState(
         {
             name: [],
@@ -51,8 +51,28 @@ export const Home = () => {
         }
     )
 
-    // const [showModal, setShowModal] = useState(false)
+    // Sets columns for AG Gric
+    const [columnDefs, setColumnDefs] = useState([
+        { field: "name" },
+        { field: "issuer.name" },
+        { field: "country.country" },
+        { field: "asset_rating" },
+        { field: "esg_rating" },
+        { field: "asset_class.asset_class" },
+        { field: "industry.industry" },
+        { field: "esg_concern.concern" },
+        // Add a grouped field for the esg concerns 
+    ])
 
+    // Sets column behavior for AG Grid
+    const defaultColDef = useMemo(() => ({
+        sortable: true,
+        filter: true,
+        animateRows: true,
+        resizable: true
+    }), [])
+
+    // Initial render
     useEffect(() => {
         getUsers()
             .then(setUsers)
@@ -101,91 +121,27 @@ export const Home = () => {
         []
     )
 
+    // Refreshes funds when the user changes the filters
     useEffect(() => {
         getResources()
     },
         [filter]
     )
 
-    const handleFundOpen = (f) => {
-        setContent(f)
-        setOpen(true);
-    }
-
-    const handleOpenIssuer = (x) => {
-        setOpen(false);
-        getIssuer(x)
-            .then((i) => setContent(i))
-            .then(() => setOpenIssuer(!openIssuer))
-    };
-
+    // Saves ESG filter input to state
     const handleCheckBoxChange = (id) => {
         let copy = { ...filter }
         if (copy['esg'].includes(id)) {
             copy.esg.splice(id)
-            console.log(copy)
             setFilter(copy)
         }
         else {
             copy.esg.push(id)
-            console.log(copy)
             setFilter(copy)
         }
     }
 
-    const handleClose = () => {
-        setOpen(false);
-        setOpenRec(false);
-        setOpenIssuer(false);
-    };
-
-    const handleOpenRec = (fundId) => {
-        setOpen(false);
-        setRecId(fundId)
-        setContent(users)
-        setOpenRec(true)
-    }
-
-    const handleRecFund = (rec) => {
-        setOpenRec(false)
-        createRecommendation(rec)
-    }
-
-    const handleFavorite = (issuerId) => {
-        setFaveButton(!faveButton)
-        Fave(issuerId)
-        setOpenIssuer(false)
-    }
-    const handleUnFavorite = (issuerId) => {
-        setFaveButton(!faveButton)
-        unFave(issuerId)
-        setOpenIssuer(false)
-    }
-
-    const handleWatch = (fundId) => {
-        watchFund(fundId)
-        setWatchButton(!watchButton)
-        setOpen(false)
-    }
-    const handleUnWatch = (fundId) => {
-        unWatchFund(fundId)
-        setWatchButton(!watchButton)
-        setOpen(false)
-    }
-
-    const resetFilter = () => {
-        setFilter(
-            {
-                name: [],
-                issuer: [],
-                assetclass: [],
-                industry: [],
-                esg: []
-            }
-        )
-        setConcernChecks([])
-    }
-
+    // Send db request with any query params that are in state
     const getResources = () => {
         let queryString = "/funds?"
         for (let key in filter) {
@@ -217,68 +173,88 @@ export const Home = () => {
             .then(setFunds)
     }
 
-    const defaultColDef = useMemo(() => ({
-        sortable: true,
-        filter: true,
-        animateRows: true,
-        resizable: true
-    }), [])
+    // Clears filter state
+    const resetFilter = () => {
+        setFilter(
+            {
+                name: [],
+                issuer: [],
+                assetclass: [],
+                industry: [],
+                esg: []
+            }
+        )
+        setConcernChecks([])
+    }
 
+    // Opens modals
     const cellClickedListener = useCallback(e => {
-        // Check the incoming data
-        console.log(e)
         if (e.column.colId === "name") {
             handleFundOpen(e.data)
-            // When the data is a fund, open the fund modal
         }
         else if (e.column.colId === "issuer.name") {
-            // When the data is an issuer, open the issuer modal
             handleOpenIssuer(e.data.issuer.id)
         }
     })
 
+    // Opens fund modal
+    const handleFundOpen = (f) => {
+        setContent(f)
+        setOpen(true);
+    }
+
+    // Opens issuer modal
+    const handleOpenIssuer = (x) => {
+        setOpen(false);
+        getIssuer(x)
+            .then((i) => setContent(i))
+            .then(() => setOpenIssuer(!openIssuer))
+    };
+
     return (<>
+    {/* Modals */}
         {
-            open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} handleWatch={handleWatch} handleUnWatch={handleUnWatch} watchButton={watchButton}/> : ""
+            open != 0 ? <FundModal open={open} setOpen={setOpen} setRecId={setRecId} openIssuer={openIssuer} setOpenIssuer={setOpenIssuer} content={content} setContent={setContent} users={users} watchButton={watchButton} setWatchButton={setWatchButton} openRec={openRec} setOpenRec={setOpenRec} /> : ""
         }
         {
-            openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
+            openRec != 0 ? <RecModal openRec={openRec} setOpenRec={setOpenRec} recId={recId} content={content} /> : ""
         }
         {
-            openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} handleFavorite={handleFavorite} handleUnFavorite={handleUnFavorite} faveButton={faveButton} /> : ""
+            openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} setOpenIssuer={setOpenIssuer} setOpen={setOpen} setOpenRec={setOpenRec} content={content} faveButton={faveButton} setFaveButton={setFaveButton} /> : ""
         }
-        <Box className="page_content_box" sx={{height: "541px", border: "solid 1px #babfc7"}}>
+        {/* JSX */}
+        <Box className="page_content_box" sx={{ height: "541px", border: "solid 1px #babfc7" }}>
             <Box className="grid_box" sx={{ flexGrow: 1 }}>
                 <Grid container spacing={1}>
                     {/* container for filters */}
                     <Grid item container xs={1.9} className="filter_box" sx={{
-                        direction:"column",
+                        direction: "column",
                         height: "539px",
                         alignContent: "space-evenly",
                         border: "1px, solid, black",
                         backgroundColor: "#fff",
                         marginLeft: "9px",
                         marginTop: "9px"
-                        }}>
+                    }}>
                         {/* filter by name jsx */}
-                        <Grid item className="filter--search" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--search" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             <fieldset id="nameSearchField">
-                                
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="name..."
-                                        onChange={e => {
-                                            e.preventDefault()
-                                            let copy = { ...filter }
-                                            copy.name.push(e.currentTarget.previousElementSibling.value)
-                                            setFilter(copy)
-                                        }}
-                                    />
-                                
+
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="name..."
+                                    onChange={e => {
+                                        e.preventDefault()
+                                        let copy = { ...filter }
+                                        copy.name.push(e.currentTarget.previousElementSibling.value)
+                                        setFilter(copy)
+                                    }}
+                                />
+
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--issuer" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--issuer" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             {/* filter by issuer jsx */}
                             <fieldset>
                                 <select
@@ -305,7 +281,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--asset_class" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--asset_class" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             {/* filter by asset class jsx */}
                             <fieldset>
                                 <select
@@ -332,7 +308,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--industry" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--industry" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             <fieldset className="form-group">
                                 <select
                                     className="industry_dropdown"
@@ -357,7 +333,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--country" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--country" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             <fieldset className="form-group">
                                 <select
                                     className="country_dropdown"
@@ -382,7 +358,7 @@ export const Home = () => {
                                 </select>
                             </fieldset>
                         </Grid>
-                        <Grid item className="filter--esg" sx={{width: "240px", backgroundColor: "#f8f8f8"}}>
+                        <Grid item className="filter--esg" sx={{ width: "240px", backgroundColor: "#f8f8f8" }}>
                             <fieldset className="form-group">
                                 <Typography sx={{ fontWeight: "bold" }}>Filter by ESG Sector</Typography>
                                 {esgConcerns?.map((ec) => {
@@ -404,12 +380,12 @@ export const Home = () => {
                                     )
                                 })}</fieldset>
                         </Grid>
-                        <Grid item className="filter--button" sx={{width: "240px"}}>
+                        <Grid item className="filter--button" sx={{ width: "240px" }}>
                             <button onClick={() => resetFilter()}>Reset Filters</button>
                         </Grid>
                     </Grid>
                     {/* container for returned funds */}
-                    <Grid item className="ag-theme-alpine" sx={{ height: 550, paddingLeft: 0, marginLeft: 0,}} xs={10}>
+                    <Grid item className="ag-theme-alpine" sx={{ height: 550, paddingLeft: 0, marginLeft: 0, }} xs={10}>
                         <AgGridReact
                             onCellClicked={cellClickedListener}
                             rowData={funds}

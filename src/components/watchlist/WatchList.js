@@ -1,92 +1,87 @@
 
-import { Box, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
-import { getWatchList } from "../funds/FundManager"
+import { Box, Button, Typography } from "@mui/material"
+import { unWatchFund } from "../funds/FundManager"
 import { getIssuer} from "../issuers/IssuerManager"
-import { FundModal} from "../modal/FundModal"
-import { IssuerModal } from "../modal/IssuerModal"
-import { RecModal } from "../modal/RecModal"
-import { createRecommendation } from "../recommendations/RecommendationManager"
-import { getUsers } from "../users/UserManager"
 
-export const WatchList = () => {
-    const [funds, setFunds] = useState()
-    const [open, setOpen] = useState(false);
-    const [openRec, setOpenRec] = useState(false);
-    const [recId, setRecId] = useState(0)
-    const [openIssuer, setOpenIssuer] = useState(false);
-    const [content, setContent] = useState({})
-    const [users, setUsers] = useState([])
-    const [issuer, setIssuer] = useState({})
-
-
-    useEffect(() => {
-        getWatchList()
-            .then((d) => setFunds(d))
-    },
-        [])
-
-    useEffect(() => {
-        getUsers()
-            .then(setUsers)
-    },
-        [])
+export const WatchList = ({funds, open, openIssuer, refreshFunds, setRefreshFunds, setContent, setOpen, setOpenIssuer }) => {
 
     const handleFundOpen = (f) => {
         setContent(f)
         setOpen(!open);
     }
-    const handleOpenRec = (fundId) => {
-        setOpen(!open);
-        setRecId(fundId)
-        setContent(users)
-        setOpenRec(!openRec)
-    }
-
-    const handleOpenIssuer = (x) => {
-        setOpen(!open)
+    const handleOpenIssuer2 = (x) => {
         getIssuer(x)
-            .then((i) => setIssuer(i))
-            .then(() => setContent(issuer))
+            .then(() => setContent(x))
             .then(() => setOpenIssuer(!openIssuer))
     };
-
-    const handleRecFund = (rec) => {
-        setOpenRec(!openRec)
-        createRecommendation(rec)
+    const handleUnWatch = (fundId) => {
+        unWatchFund(fundId)
+            .then(setRefreshFunds(!refreshFunds))
     }
 
-    const handleClose = () => {
-        setOpen(!open);
-    };
-
     return (
-        <>
-            {
-                open != 0 ? <FundModal open={open} content={content} handleClose={handleClose} handleOpenRec={handleOpenRec} handleOpenIssuer={handleOpenIssuer} /> : ""
-            }
-            {
-                openRec != 0 ? <RecModal openRec={openRec} recId={recId} content={content} handleRecFund={handleRecFund} /> : ""
-            }
-            {
-                openIssuer != 0 ? <IssuerModal openIssuer={openIssuer} content={content} /> : ""
-            }
-            <Box className="page_content_box">
-                <Box className="page_title_box">
-                    <h1>Watched Funds</h1>
-                </Box>
-                <Box className="page_separator_box">
-                    <hr className="page_separator" />
-                </Box>
-                <Box className="list_container">
-                    {funds?.map((f) => {
-                        return (<>
-                            <Typography onClick={() => handleFundOpen(f)}>{f.name}</Typography>
-                            <Typography>{f.country.country}</Typography>
-                        </>)
-                    })}
-                </Box>
-            </Box>
+    <>
+             {/* Watch List Column */}
+                        <h3 style={{ alignSelf: "center", marginTop: "20px" }}>Watched Funds</h3>
+                        {funds?.map((f) => {
+                            return (
+                                <Box className="fund_box" sx={{
+                                    border: "1px solid black",
+                                    margin: "1em",
+                                    padding: "1em",
+                                    width: "300px",
+                                    backgroundColor: "#ffffff",
+                                    display: "flex",
+                                    flexDirection: "column"
+                                }}>
+                                    <Box className="content_box" sx={{  display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+                                        {/* first column box */}
+                                        <Box className="column_box" sx={{ display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Fund:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Issuer:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ fontWeight: "bold" }}>ESG Rating:</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ fontWeight: "bold" }}>ESG Concerns:</Typography>
+                                            </Box>
+                                        </Box>
+                                        {/* second column box */}
+                                        <Box className="column_box" sx={{ display: "flex", flexDirection: "column" }}>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}>{f.name}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography onClick={() => handleOpenIssuer2(f.issuer.id)}>{f.issuer.name}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography>{f.esg_rating}</Typography>
+                                            </Box>
+                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                                <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}>{f.esg_concern.map((ec) => {
+                                                    return (
+                                                        <Typography>{ec.concern}</Typography>
+                                                    )
+                                                })}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                    {/* Unwatch Button Box */}
+                                    <Box className="button_box" key={`fav--${f.id}`}
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "center"
+                                        }}>
+                                        <Button variant="contained" sx={{ margin: "1em" }} onClick={() => handleUnWatch(f.id)}>Remove Fund</Button>
+                                    </Box>
+                                </Box>
+                            )
+                        })}
         </>
     )
 }

@@ -1,8 +1,22 @@
-import { Button, DialogTitle, Paper, Typography } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import { Box } from "@mui/system"
+import { watchFund } from "../funds/FundManager"
+import { deleteRecommendation } from "./RecommendationManager"
 
 // then prints the rec list to the DOM with handling Buttons
-export const RecList = ({ recs, HandleWatch, HandleReject }) => {
+export const RecList = ({ recs, refreshRecs, setRefreshRecs, refreshFunds, setRefreshFunds }) => {
+
+    const HandleReject = (recId) => {
+        deleteRecommendation(recId)
+            .then(setRefreshRecs(!refreshRecs))
+    }
+
+    const HandleWatch = (rec) => {
+        watchFund(rec.fund.id)
+            .then(deleteRecommendation(rec.id))
+            .then(setRefreshRecs(!refreshRecs))
+            .then(setRefreshFunds(!refreshFunds))
+    }
 
     return (
         <>

@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import { Fave, unFave } from '../issuers/IssuerManager';
 
-export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorite, handleUnFavorite, content }) => {
+export const IssuerModal = ({ openIssuer, setOpenIssuer, faveButton, setFaveButton, content }) => {
     
     const style = {
         position: 'absolute',
@@ -16,41 +17,55 @@ export const IssuerModal = ({ openIssuer, handleClose, faveButton, handleFavorit
         pt: 2,
         px: 4,
         pb: 3,
+        display: "flex",
+        flexDirection: "column"
     };
+
+    const handleFavorite = (issuerId) => {
+        setFaveButton(!faveButton)
+        Fave(issuerId)
+        setOpenIssuer(false)
+    }
+    const handleUnFavorite = (issuerId) => {
+        setFaveButton(!faveButton)
+        unFave(issuerId)
+        setOpenIssuer(false)
+    }
+
+    const HandleClose = () => {
+        setOpenIssuer(false);
+    };
+
 
     return (<>
         <div>
-            {/* <Button onClick={handleOpen}>Open modal</Button> */}
             <Modal
                 open={openIssuer}
-                onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
+                onClose={HandleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
             >
                     
-                    <Box sx={{ ...style, display: "flex", flexDirection: "column", width: 400 }}>
-                        <h2 onTou style={{ alignSelf: "center" }} id="parent-modal-title">{content?.name}</h2>
+                    <Box sx={{ ...style }}>
+                        <h2 style={{ alignSelf: "center" }} id="modal-title">{content?.name}</h2>
                         <Box style={{ display: "flex", justifyContent: "space-evenly" }}>
                             <Box style={{ alignSelf: "flex-start" }} >
                                 <img style={{ width: "150px", height: "250px" }} src={content?.image_url} alt="boohoo" className="img-responsive" />
                             </Box>
                             <Box style={{ display: 'flex', flexDirection: 'column' }}>
                             <Box>
-                                <p id="parent-modal-description">Domicile: {content?.country?.country}</p>
+                                <p id="modal-description">Domicile: {content?.country?.country}</p>
                             </Box>
                             <Box>
                                         <ul className="issuer_funds_box" sx={{ display: "flex", justifyContent: "space-evenly", padding: "5px" }}>{content?.funds?.map((fund) => {
                                             return <li>{fund.name}</li>
                                         })}</ul>
                                     </Box>
-                            {/* <Box>
-                                {content?.funds?.map((fund) => {
-                                    return <img style={{ width: "25px", height: "25px" }} src={fund.image_url} alt="boohoo" className="img-responsive" />
-                                })}
-                            </Box> */}
                         </Box>
                     </Box>
                     <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
+                        {/* TODO: Check to see if this issuer is on the current user's favorites list,
+                                Then set the faveButton to appropriate value */}
                         {faveButton ?
                             <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
                             :
