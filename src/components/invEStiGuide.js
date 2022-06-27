@@ -36,7 +36,7 @@ export const Investiguide = () => {
                  <Route>
                  {/* passing a reference to the toggle function with props to navbar */}
                 <NavBar drawerClickHandler={DrawerTogglerHandler} />
-                <SideDrawer show={sideDrawerOpen} />
+                <SideDrawer show={sideDrawerOpen} setSideDrawerOpen={setSideDrawerOpen} sideDrawerOpen={sideDrawerOpen}/>
                 {backdrop}
                 <ApplicationViews />
                 <Footer/>

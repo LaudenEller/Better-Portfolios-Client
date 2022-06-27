@@ -5,7 +5,7 @@ import { User } from "../users/User";
 import { getUser, updateUser } from "../users/UserManager";
 import "./SideDrawer.css"
 
-export const SideDrawer = props => {
+export const SideDrawer = ({show, setSideDrawerOpen, sideDrawerOpen}) => {
     const [user, setUser] = useState()
     const [editForm, setEditForm] = useState(false)
     const [refreshUser, setRefreshUser] = useState(false)
@@ -21,7 +21,7 @@ export const SideDrawer = props => {
     const history = useHistory()
 
     let drawerClasses = 'sidedrawer'
-    if (props.show) {
+    if (show) {
         drawerClasses = 'sidedrawer open'
     }
 
@@ -51,12 +51,10 @@ export const SideDrawer = props => {
 
     return (
         <nav style={{ display: "flex" }} className={drawerClasses}>
-            <Box className="content_box" sx={{ display: "flex", justifyContent: "space-between", flexDirection: "column", height: "100%" }}>
-                {
-                    localStorage.getItem("auth_token") !== null ? <>
-                        <h1 style={{ alignSelf: "center", marginTop: "100px" }}
+            <Box className="content_box" sx={{ display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "100%" }}>
+                        <h1 style={{ alignSelf: "center", marginTop: "35px", marginBottom: "400px" }}
                             onClick={() => {
-
+                                setSideDrawerOpen(!sideDrawerOpen)
                                 history.push({ pathname: "/profile" })
                             }}>
                             Profile
@@ -80,24 +78,6 @@ export const SideDrawer = props => {
                             }}>
                             Logout
                         </Button>
-                    </>
-                        :
-                        <>
-                            <Link to="/login" style={{ textDecoration: "none" }}>
-                                <Button variant="contained"
-                                    sx={{
-                                        background: "grey",
-                                        ":hover": {
-                                            background: "grey"
-                                        },
-                                        margin: "0.2em",
-                                        height: "1px"
-                                    }}>
-                                    Login/Register
-                                </Button>
-                            </Link>
-                        </>
-                }
             </Box >
         </nav >
     )

@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import { getIssuer } from '../issuers/IssuerManager';
+import { unWatchFund, watchFund } from '../funds/FundManager';
 
 
 const style = {
@@ -10,27 +12,59 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '2px solid #7db343',
     boxShadow: 24,
     pt: 2,
     px: 4,
     pb: 3,
+    display: "flex",
+    flexDirection: "column"
 };
 
-export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, content, handleWatch, handleUnWatch, watchButton }) => {
+export const FundModal = ({ open, setOpen, openRec, setOpenRec, setRecId, openIssuer, setOpenIssuer, users, setContent, content, watchButton, setWatchButton }) => {
+
+    const HandleOpenIssuer = (x) => {
+        setOpen(!open)
+        getIssuer(x)
+            .then((i) => setContent(i))
+            .then(() => setOpenIssuer(!openIssuer))
+    };
+
+    const HandleOpenRec = (fundId) => {
+        setOpen(!open);
+        setRecId(fundId)
+        setContent(users)
+        setOpenRec(!openRec)
+    }
+
+    const HandleClose = () => {
+        setOpen(!open);
+    };
+
+    const HandleWatch = (fundId) => {
+        watchFund(fundId)
+        .then(setWatchButton(!watchButton))
+        setOpen(false)
+    }
+
+    const HandleUnWatch = (fundId) => {
+        unWatchFund(fundId)
+        setWatchButton(!watchButton)
+        setOpen(false)
+    }
 
     return (<>
         <div>
             <Modal
                 open={open}
-                onClose={handleClose}
+                onClose={HandleClose}
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
             >
-                    <Box sx={{ ...style, display: "flex", flexDirection: "column", width: 400 }}>
+                    <Box sx={{ ...style }}>
                         <h2 style={{ alignSelf: "center" }} id="parent-modal-title">{content?.name}</h2>
-                        <Box style={{ display: "flex", justifyContent: "space-evenly" }}>
-                            <Box style={{ alignSelf: "flex-start" }} >
+                        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                            <Box sx={{ alignSelf: "flex-start" }} >
                                 <img style={{ width: "150px", height: "250px" }} src={content.image_url} alt="boohoo" className="img-responsive" />
                             </Box>
                             <Box>
@@ -42,14 +76,16 @@ export const FundModal = ({ open, handleOpenRec, handleOpenIssuer, handleClose, 
                                 <p>ESG Rating: {content.esg_rating}</p>
                             </Box>
                         </Box>
-                        <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
+                        <Box className="buttons_box" sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                            {/* TODO: Check to see if this fund is on the current user's watch list,
+                                    Then set watchButton to the appropriate value */}
                             {watchButton ?
-                            <Button onClick={() => handleWatch(content.id)}>Watch</Button>
+                            <Button onClick={() => HandleWatch(content.id)}>Watch</Button>
                             :
-                            <Button onClick={() => handleUnWatch(content.id)}>Unwatch</Button>
+                            <Button onClick={() => HandleUnWatch(content.id)}>Unwatch</Button>
                         }
-                            <Button onClick={() => handleOpenRec(content.id)}>Recommend Fund</Button>
-                            <Button onClick={() => handleOpenIssuer(content.issuer.id)}>See Issuer</Button>
+                            <Button onClick={() => HandleOpenRec(content.id)}>Recommend Fund</Button>
+                            <Button onClick={() => HandleOpenIssuer(content.issuer.id)}>See Issuer</Button>
                         </Box>
                     </Box>
             </Modal>

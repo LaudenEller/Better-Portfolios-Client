@@ -1,4 +1,6 @@
-img{
-    width: 100%;
-    height: 100%;
+.nav {
+background-color: #EEFCF8;
+}
+.page_separator {
+    margin-block-end: 0;
 }

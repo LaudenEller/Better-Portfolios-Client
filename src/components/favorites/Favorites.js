@@ -1,86 +1,52 @@
 import { Box, Button, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
-import { getFavorites, unFave } from "../issuers/IssuerManager"
+import { unFave } from "../issuers/IssuerManager"
 
 
-export const FavoritesList = () => {
-    const [favorites, setFavorites] = useState()
-    const [refreshFaves, setRefreshFaves] = useState()
-
-    useEffect(() => {
-        getFavorites()
-            .then(setFavorites)
-    },
-        [])
-    useEffect(() => {
-        getFavorites()
-            .then(setFavorites)
-    },
-        [refreshFaves])
+export const FavoritesList = ({favorites, setRefreshFaves, refreshFaves}) => {
 
     const HandleUnfave = (IssuerId) => {
-        // Delete Rec
         unFave(IssuerId)
-            // Invoke Refresh
             .then(() => setRefreshFaves(!refreshFaves))
     }
 
     return (
         <>
 
-            <Box className="page_content_box">
-                <Box className="page_title_box">
-                    <h1>Favorite Issuers</h1>
-                </Box>
-                <Box className="page_separator_box">
-                    <hr className="page_separator" />
-                </Box>
-                <Box className="list_container">
-                    {favorites?.map((f) => {
-                        return (<>
-                        <Box
-                        sx={{
-                            border: "1px solid black",
-                            margin: "1em"
-                        }}>
-                            <Typography>{f.name}</Typography>
-                            <Typography>{f.country.country}</Typography>
-                            <Box key={`fav--${f.id}`}
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "flex-start"
-                                }}>
-                                <Button variant="contained" onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
-                            </Box>
-                            </Box>
-                            {/* <Typography>{f.image}</Typography> HELP: How can I get the image showing in the DOM? */}
-                        </>
-                        )
-                    })}
-                </Box>
-            </Box>
+<h3 style={{ alignSelf: "center" }}>Favorites Cos</h3>
+                        {favorites?.map((f) => {
+                            return (<>
+                                <Box
+                                    sx={{
+                                        border: "1px solid black",
+                                        margin: "1em",
+                                        padding: "1em",
+                                        width: "300px",
+                                        display: 'flex',
+                                        flexDirection: "column",
+                                        justifyContent: "space-evenly",
+                                        backgroundColor: "#ffffff"
+                                    }}>
+                                    <Box sx={{ display: "flex", justifyContent: "space-evenly" }} >
+                                        <Typography sx={{fontWeight: "bold", fontSize: "large"}}>{f.name}</Typography>
+                                        <img style={{ width: "50px", height: "50px" }} src={f.image_url} alt="boohoo" className="img-responsive" />
+                                    </Box>
+                                    <Box>
+                                        <ul className="issuer_funds_box" sx={{ display: "flex", justifyContent: "space-evenly", padding: "5px" }}>{f?.funds?.map((fund) => {
+                                            return <li>{fund.name}</li>
+                                        })}</ul>
+                                    </Box>
+                                    <Box key={`fav--${f.id}`}
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "space-evenly"
+                                        }}>
+                                        <Button variant="contained" sx={{ margin: "1em" }} onClick={() => HandleUnfave(f.id)}>Unfavorite.</Button>
+                                    </Box>
+                                </Box>
+                            </>
+                            )
+                        })}
         </>
     )
 }
-
-// Fetch the current user's favorite issuers
-// Render a list of those issuers to the DOM with a "remove" button
-// When an issuer is clicked on
-    // a popup should appear with that issuer's details and funds
-        // When one of their funds are clicked on
-            // a popup should appear with the fund details and a rec button
-                // When the rec button is clicked
-                    // a popup should appear with the rec form
-                        // When the rec form is submitted
-                            // the rec popup should disappear
-// When the "remove" button is clicked
-    // The issuer should be removed from the favorites list
-
-// add refresh state
-
-// add modal state
-
-// add function that opens modal
-
-// print the modal, and the fave list
