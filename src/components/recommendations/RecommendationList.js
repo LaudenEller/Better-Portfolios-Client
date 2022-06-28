@@ -20,11 +20,11 @@ export const RecList = ({ recs, refreshRecs, setRefreshRecs, refreshFunds, setRe
 
     return (
         <>
-            <Box className="rec_section">
-                <Box sx={{display: "flex", flexDirection: "column", }}>
-                    <h3 style={{ alignSelf: "center" }} className="recs--to--you--title">Your Recommendations</h3>
-                </Box>
-                <Box className="recs--to--you" sx={{ marginBottom: "25px", display: "flex", flexDirection: "column" }}>
+            {/* <Box className="rec_section">
+                <Box sx={{display: "flex", flexDirection: "column", }}> */}
+                    <h3 style={{ alignSelf: "center", marginTop: "20px" }} className="recs--to--you--title">Your Recommendations</h3>
+                {/* </Box> */}
+                {/* <Box className="recs--to--you" sx={{ marginBottom: "25px", display: "flex", flexDirection: "column" }}> */}
                     {recs?.map((r) => {
                         return (
 
@@ -35,20 +35,18 @@ export const RecList = ({ recs, refreshRecs, setRefreshRecs, refreshFunds, setRe
                                 width: "300px",
                                 backgroundColor: "#ffffff",
                                 display: "flex",
-                                flexDirection: "column",
-                                marginBottom: "25px",
-
+                                flexDirection: "column"
                             }}>
-                                <Box className="content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", marginBottom: "25px" }}>
+                                <Box className="content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
 
                                     {/* first column box */}
                                     <Box className="column_box" sx={{ display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                                         <Box sx={{ justifySelf: "flex-start" }}>
                                             <Typography sx={{ fontWeight: "bold" }}>From:</Typography>
                                         </Box>
-                                        <Box sx={{ justifySelf: "flex-start" }}>
+                                        {/* <Box sx={{ justifySelf: "flex-start" }}>
                                             <Typography sx={{ fontWeight: "bold" }}>Fund:</Typography>
-                                        </Box>
+                                        </Box> */}
                                         <Box sx={{ justifySelf: "flex-start" }}>
                                             <Typography sx={{ fontWeight: "bold" }}>Note:</Typography>
                                         </Box>
@@ -59,15 +57,13 @@ export const RecList = ({ recs, refreshRecs, setRefreshRecs, refreshFunds, setRe
                                     {/* second column box */}
                                     <Box className="column_box" sx={{ display: "flex", flexDirection: "column" }}>
                                         <Box sx={{ justifySelf: "flex-start" }}>
-                                            <Typography> {r.recommender.username}</Typography>
+                                            <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}> {r.recommender.username}</Typography>
                                         </Box>
+                                        {/* <Box sx={{ justifySelf: "flex-start" }}>
+                                            <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}> {r.fund?.name}</Typography>
+                                        </Box> */}
                                         <Box sx={{ justifySelf: "flex-start" }}>
-                                            <Typography> {r.fund?.name}</Typography>
-                                        </Box>
-                                        <Box sx={{ justifySelf: "flex-start" }}>
-                                        </Box>
-                                        <Box sx={{ justifySelf: "flex-start" }}>
-                                            <Typography> {r.note}</Typography>
+                                            <Typography sx={{ overflow: "scroll", maxWidth: "100px" }}> {r.note}</Typography>
                                         </Box>
                                     </Box>
                                 </Box>
@@ -84,8 +80,8 @@ export const RecList = ({ recs, refreshRecs, setRefreshRecs, refreshFunds, setRe
                             </Box>
                         )
                     })}
-                </Box>
-            </Box>
+                {/* </Box>
+            </Box> */}
         </>
     )
 }

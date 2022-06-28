@@ -95,7 +95,7 @@ export const Profile = () => {
             {/* JSX */}
             <Box className="all_content_box" >
                 <Box className="sub_content_box" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", border: "solid 1px black", height: "600px", overflow: "hidden", backgroundColor: "#f3f6f3" }}>
-                    <Box sx={{ overflow: "scroll", backgroundColor: "#f8ffff", border: "solid 1px black", marginTop: "25px", marginBottom: "25px" }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", overflow: "scroll", backgroundColor: "#f8ffff", border: "solid 1px black", marginTop: "25px", marginBottom: "25px" }}>
                         {/* Rec List Column */}
                         <RecList recs={recs} refreshRecs={refreshRecs} setRefreshRecs={setRefreshRecs} refreshFunds={refreshFunds} setRefreshFunds={setRefreshFunds} />
                     </Box>

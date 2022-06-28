@@ -40,9 +40,9 @@ export const WatchList = ({funds, open, openIssuer, refreshFunds, setRefreshFund
                                             <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Fund:</Typography>
                                             </Box>
-                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                            {/* <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography onClick={() => handleFundOpen(f)} sx={{ fontWeight: "bold" }}>Issuer:</Typography>
-                                            </Box>
+                                            </Box> */}
                                             <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography sx={{ fontWeight: "bold" }}>ESG Rating:</Typography>
                                             </Box>
@@ -55,9 +55,9 @@ export const WatchList = ({funds, open, openIssuer, refreshFunds, setRefreshFund
                                             <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography sx={{ overflow: "scroll", height: "35px", maxWidth: "100px" }}>{f.name}</Typography>
                                             </Box>
-                                            <Box sx={{ justifySelf: "flex-start" }}>
+                                            {/* <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography onClick={() => handleOpenIssuer2(f.issuer.id)}>{f.issuer.name}</Typography>
-                                            </Box>
+                                            </Box> */}
                                             <Box sx={{ justifySelf: "flex-start" }}>
                                                 <Typography>{f.esg_rating}</Typography>
                                             </Box>
