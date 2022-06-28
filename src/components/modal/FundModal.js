@@ -43,7 +43,6 @@ export const FundModal = ({ open, setOpen, openRec, setOpenRec, setRecId, openIs
 
     const HandleWatch = (fundId) => {
         watchFund(fundId)
-        .then(setWatchButton(!watchButton))
         setOpen(false)
     }
 

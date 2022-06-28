@@ -9,7 +9,7 @@ import { Footer } from "./footer/Footer"
 import { SideDrawer } from "./nav/SideDrawer"
 import { Backdrop } from "./nav/backdrop/Backdrop"
 
-export const Investiguide = () => {
+export const BetterPortfolios = () => {
     const [sideDrawerOpen, setSideDrawerOpen] = useState(false)
 
     const DrawerTogglerHandler = () => {

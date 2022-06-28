@@ -1,13 +1,13 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter as Router } from "react-router-dom"
-import { Investiguide } from "./components/invEStiGuide.js"
+import { BetterPortfolios } from "./components/BetterPortfolios.js"
 import "./index.css"
 
 ReactDOM.render(
     <React.StrictMode>
         <Router>
-            <Investiguide />
+            <BetterPortfolios />
         </Router>
     </React.StrictMode>,
     document.getElementById("root")
