@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { Fave, unFave } from '../issuers/IssuerManager';
 
-export const IssuerModal = ({ openIssuer, setOpenIssuer, faveButton, setFaveButton, content }) => {
+export const IssuerModal = ({ favorites, setRefreshFaves, refreshFaves, openIssuer, setOpenIssuer, faveButton, setFaveButton, content }) => {
     
     const style = {
         position: 'absolute',
@@ -24,6 +24,7 @@ export const IssuerModal = ({ openIssuer, setOpenIssuer, faveButton, setFaveButt
     const handleFavorite = (issuerId) => {
         setFaveButton(!faveButton)
         Fave(issuerId)
+        setRefreshFaves(!refreshFaves)
         setOpenIssuer(false)
     }
     const handleUnFavorite = (issuerId) => {
@@ -66,10 +67,10 @@ export const IssuerModal = ({ openIssuer, setOpenIssuer, faveButton, setFaveButt
                     <Box className="buttons_box" style={{ display: "flex", justifyContent: "space-evenly" }}>
                         {/* TODO: Check to see if this issuer is on the current user's favorites list,
                                 Then set the faveButton to appropriate value */}
-                        {faveButton ?
-                            <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
-                            :
+                        {(favorites.some(f => f.id === content.id))  ?
                             <Button onClick={() => handleUnFavorite(content.id)}>Unfavorite</Button>
+                            :
+                            <Button onClick={() => handleFavorite(content.id)}>Favorite</Button>
                         }
                     </Box>
                     </Box>

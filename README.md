@@ -20,6 +20,8 @@ BP was created during the last two week sprint of my full time, six month, full 
 
 # How Better Portfolios Works
 
+<!-- ADD SOMETHING ABOUT  -->
+
 This is the front end repo, it's back end sibling lives [here](https://github.com/LaudenEller/Final-Capstone)
 
 Users can create a profile by providing a username, password, name and email (the email is not used by the site other than log in so feel free to use a fake!).
@@ -31,9 +33,9 @@ Users can also view their profile section where all the funds and issuers they'r
 
 # How Better Portfolios Was Developed
 
-BP is a full stack project that utilizes Python 3.9, a SQLite db with RESTful Django API for the server-side, and React with Reactjs for the client-side.
+BP is a full stack project that utilizes Python 3.9, a SQLite db with RESTful Django API for the server-side, and React with Reactjs incorporating MUI CSS library manager and AG Grid for the client-side.
 
-I developed this app under less than ideal circumstances, due to unavoidable circumstances I had been out of school for several weeks leading up to the beginning of the sprint and once things got rolling, I was quickly overcome with brain fatigue and overload. By the end of each long day, things that had taken me 2 minutes in the morning were taking me 30 minutes after 10 hours of coding. It was my first grueling sprint. 
+I developed this app under less than ideal circumstances, due to unavoidable circumstances I had been out of school for several weeks leading up to the beginning of the sprint and once things got rolling, I was quickly overcome with brain fatigue and overload. By the end of each long day, things that had taken me 2 minutes in the morning were taking me 30 minutes after 10 hours of coding. It was my first truly grueling sprint. 
 
 I reached MVP, and a presentable basic CSS within the deadline, and while I didn't get to finish the NSS program with the bang that I had hoped to, this app does pass all the "client's" parameters and I am proud of the work it took to get it passed the finish line. In the near future, I hope to add more functionality so there are different classes of users while also improving the graphics. Eventually, I would love to hook this app up to an external database and provide links to download the funds' ESG reports and to brokers selling them.
 

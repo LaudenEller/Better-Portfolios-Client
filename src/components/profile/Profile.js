@@ -28,35 +28,25 @@ export const Profile = () => {
     const [openRec, setOpenRec] = useState(false);
     const [openIssuer, setOpenIssuer] = useState(false);
     const [faveButton, setFaveButton] = useState(true)
-    
+
     // Passes fund id to rec modal
     const [recId, setRecId] = useState(0)
-    
+
     // Passes content to modals
     const [content, setContent] = useState({})
 
     // Add ternary operator that loads "loading div" until resources arrive from db
-        // Add animation to initial and subsequent renders
+    // Add animation to initial and subsequent renders
     // const [load, finishLoad] = useState(false)
 
     // Initial render
     useEffect(() => {
         getFavorites()
             .then(setFavorites)
-    },
-        [])
-    useEffect(() => {
         getRecommendations()
             .then((d => setRecs(d)))
-    },
-        [])
-
-    useEffect(() => {
         getWatchList()
             .then((d) => setFunds(d))
-    },
-        [])
-    useEffect(() => {
         getUsers()
             .then(setUsers)
     },
