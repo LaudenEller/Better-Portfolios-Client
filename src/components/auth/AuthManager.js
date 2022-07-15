@@ -1,5 +1,5 @@
 export const registerUser = (user) => {
-  return fetch("http://localhost:8000/register", {
+  return fetch("https://betterportfolios.herokuapp.com/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
