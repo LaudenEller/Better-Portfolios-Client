@@ -1,13 +1,8 @@
+import { fetchIt } from "../../utils/Fetch"
+import { Settings } from "../../utils/Settings"
+
 export const registerUser = (user) => {
-  return fetch("https://betterportfolios.herokuapp.com/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-    body: JSON.stringify(user)
-  })
-    .then(res => res.json())
+  return fetchIt(`${Settings.API}`, "POST", JSON.stringify(user))
 }
 
 export const loginUser = (user) => {
