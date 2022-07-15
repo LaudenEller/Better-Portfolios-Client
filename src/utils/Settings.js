@@ -1,3 +1,3 @@
 export const Settings = {
-    API: "http://localhost:8000",
+    API: "https://betterportfolios.herokuapp.com/",
 }
