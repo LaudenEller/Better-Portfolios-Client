@@ -2,7 +2,7 @@ import { fetchIt } from "../../utils/Fetch"
 import { Settings } from "../../utils/Settings"
 
 export const registerUser = (user) => {
-  return fetchIt(`${Settings.API}/register_user`, "POST", JSON.stringify(user))
+  return fetchIt(`${Settings.API}/register`, "POST", JSON.stringify(user))
 }
 
 export const loginUser = (user) => {
