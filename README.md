@@ -2,10 +2,9 @@
 
 BP helps investment professionals find securities that balance their client's portfolio needs while also maximizing positive social returns and satisfying any ethical limitations.
 
-<!-- INSERT LINK TO DEPLOYED APP HERE -->
 <!-- INSERT YOUTUBE LINK OF ME PREVIEWING THE APP HERE -->
 
-You can see a preview of the app [here](ADD A LINK HERE) and you can use the app yourself [here](ADD A LINK HERE).
+You can see a preview of the app [here](ADD A LINK HERE) and you can use the app yourself [here](https://betterportfoliosclient.herokuapp.com/).
 
 In this document:
 - [Motivation](#motivation-for-this-project)
