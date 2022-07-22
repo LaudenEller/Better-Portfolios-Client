@@ -68,7 +68,7 @@ export const FundModal = ({ open, setOpen, openRec, setOpenRec, setRecId, openIs
                             </Box>
                             <Box>
                                 <p>Issuer: {content.issuer.name}</p>
-                                <p>Asset Class: {content.asset_class.asset_class}</p>
+                                <p>Asset Class: {content.aclass.aclass}</p>
                                 <p>Industry: {content.industry.industry}</p>
                                 <p>Domicile: {content.country.country}</p>
                                 <p id="parent-modal-description">Fund Rating: {content?.asset_rating}</p>

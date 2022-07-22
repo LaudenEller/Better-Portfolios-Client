@@ -58,7 +58,7 @@ export const Home = () => {
         { field: "country.country" },
         { field: "asset_rating" },
         { field: "esg_rating" },
-        { field: "asset_class.asset_class" },
+        { field: "aclass.aclass" },
         { field: "industry.industry" },
         { field: "esg_concern.concern" },
         // Add a grouped field for the esg concerns 
@@ -301,7 +301,7 @@ export const Home = () => {
                                     {assets?.map((a) => {
                                         return (
                                             <option key={a.id} name="asset_class_id" value={a.id}>
-                                                {a.asset_class}
+                                                {a.aclass}
                                             </option>
                                         );
                                     })}
